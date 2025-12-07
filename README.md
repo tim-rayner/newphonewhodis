@@ -19,6 +19,7 @@ features/requests/
 ├─ components/
 │  ├─ server/    # Server Components (page templates)
 │  └─ client/    # Container / Presenter / Hook slices
+├─ api/       # APIs
 ├─ hooks/        # TanStack Query + client logic
 ├─ queries/      # Query keys + DTO helpers
 ├─ actions/      # Server Actions (thin wrappers)
