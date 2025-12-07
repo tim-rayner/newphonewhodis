@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { games } from "@/db/schema";
 import type { Game } from "@/shared/types/gameTypes";
+import { eq } from "drizzle-orm";
 import { generateUniqueGameCode } from "../utils/generateGameCode";
 
 type Logger = { log: (error: string) => void };
@@ -18,10 +19,18 @@ export async function startGame(
   avatar?: string
 ): Promise<StartGameResult> {
   try {
-    // 1. Generate a unique game code
+    // 1. Check if a game already exists with the same hostId
+    const existingGame = await db.query.games.findFirst({
+      where: eq(games.hostId, hostId),
+    });
+    if (existingGame) {
+      throw new Error("You are already in a game");
+    }
+
+    // 2. Generate a unique game code
     const code = await generateUniqueGameCode();
 
-    // 2. Build host player entry
+    // 3. Build host player entry
     const hostPlayer = {
       name,
       avatar: avatar ?? null,

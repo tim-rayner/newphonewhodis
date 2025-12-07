@@ -1,6 +1,17 @@
+"use client";
+
+import { usePlayerIdentity } from "@/features/player/hooks/usePlayerIdentity";
 import { ReactNode } from "react";
 
 export function AppLayout({ children }: { children: ReactNode }) {
+  const playerId = usePlayerIdentity();
+
+  // useEffect(() => {
+  //   if (playerId) {
+  //     console.log("Welcome player:", playerId);
+  //   }
+  // }, [playerId]);
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b bg-card">

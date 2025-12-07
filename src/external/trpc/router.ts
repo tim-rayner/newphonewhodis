@@ -6,12 +6,14 @@
  */
 
 import { joinGameRouter } from "@/features/joinGame/queries/router";
+import { playerRouter } from "@/features/player/router/router";
 import { startGameRouter } from "@/features/startGame/queries/router";
 import { router } from "./init";
 
 export const appRouter = router({
   startGame: startGameRouter,
   joinGame: joinGameRouter,
+  player: playerRouter,
 });
 
 /**
