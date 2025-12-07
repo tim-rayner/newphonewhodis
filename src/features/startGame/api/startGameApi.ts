@@ -1,5 +1,6 @@
 import { db } from "@/db";
 import { games } from "@/db/schema";
+import type { GameSnapshotSchema } from "@/features/game/types/schema";
 import type { Game } from "@/shared/types/gameTypes";
 import { eq } from "drizzle-orm";
 import { generateUniqueGameCode } from "../utils/generateGameCode";
@@ -41,7 +42,7 @@ export async function startGame(
     };
 
     // 3. Build initial state snapshot
-    const initialState = {
+    const initialState: GameSnapshotSchema = {
       players: {
         [hostId]: hostPlayer,
       },

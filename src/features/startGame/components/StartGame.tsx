@@ -19,7 +19,7 @@ export default function StartGame() {
         "🥳 game created successfully: ",
         JSON.stringify(data, null, 2)
       );
-      router.push(`/game/${data.id}`);
+      router.push(`/game/${data?.id}`);
     },
     onError: (error) => {
       console.log("❌ error creating game: ", error.message);
