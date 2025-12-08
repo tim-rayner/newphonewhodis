@@ -85,7 +85,7 @@ export async function joinGame(
 }
 
 export type CheckAvailabilityResult =
-  | { available: true }
+  | { available: true; hostId: string; gameId: string }
   | { available: false; reason: UnavailableReason; message: string };
 
 export async function checkAvailability(
@@ -124,5 +124,9 @@ export async function checkAvailability(
       reason: "already_ended" as const,
       message: "This game has already ended.",
     }))
-    .otherwise(() => ({ available: true as const }));
+    .otherwise(() => ({
+      available: true as const,
+      hostId: game!.hostId,
+      gameId: game!.id,
+    }));
 }

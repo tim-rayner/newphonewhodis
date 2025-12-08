@@ -42,6 +42,11 @@ export default function JoinGame() {
       onSuccess: (data) => {
         if (data.available) {
           setAvailabilityError(null);
+          // If the current player is the host, skip step 2 and go directly to the game
+          if (playerId && data.hostId === playerId) {
+            router.push(`/game/${data.gameId}`);
+            return;
+          }
           setValidatedGameCode(gameCodeForm.getValues("gameCode"));
           setStep(2);
         } else {

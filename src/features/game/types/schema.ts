@@ -31,3 +31,9 @@ export const gameSnapshotSchema = z.object({
 });
 
 export type GameSnapshotSchema = z.infer<typeof gameSnapshotSchema>;
+
+export const getGameInputSchema = z.object({
+  gameId: z.string(),
+});
+
+export type GetGameInputSchema = z.infer<typeof getGameInputSchema>;

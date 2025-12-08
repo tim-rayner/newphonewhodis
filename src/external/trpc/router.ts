@@ -5,6 +5,7 @@
  * This is the main entry point for the tRPC API.
  */
 
+import { gameRouter } from "@/features/game/queries/router";
 import { joinGameRouter } from "@/features/joinGame/queries/router";
 import { playerRouter } from "@/features/player/router/router";
 import { startGameRouter } from "@/features/startGame/queries/router";
@@ -14,6 +15,7 @@ export const appRouter = router({
   startGame: startGameRouter,
   joinGame: joinGameRouter,
   player: playerRouter,
+  game: gameRouter,
 });
 
 /**
