@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { startGame } from "../api/startGameApi";
 import { startGameSchema } from "../types/schema";
 
-async function getRandomMemeUrl(): Promise<string> {
+export async function getRandomMemeUrl(): Promise<string> {
   try {
     const res = await fetch("https://meme-api.com/gimme");
     const data = await res.json();

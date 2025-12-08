@@ -86,13 +86,16 @@ export function PlayerList({ players }: PlayerListProps) {
                     <span className="text-sm font-medium flex items-center gap-1.5">
                       {player.name}
                       {player.isHost && (
-                        <svg
-                          className="h-3.5 w-3.5 text-amber-500"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M10 2L13.09 8.26L20 9.27L15 14.14L16.18 21.02L10 17.77L3.82 21.02L5 14.14L0 9.27L6.91 8.26L10 2Z" />
-                        </svg>
+                        <div className="flex items-center gap-1">
+                          <svg
+                            className="h-3.5 w-3.5 text-amber-500"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M10 2L13.09 8.26L20 9.27L15 14.14L16.18 21.02L10 17.77L3.82 21.02L5 14.14L0 9.27L6.91 8.26L10 2Z" />
+                          </svg>
+                          <span className="text-xs text-amber-500">Host</span>
+                        </div>
                       )}
                     </span>
                     <span className="text-xs text-muted-foreground">

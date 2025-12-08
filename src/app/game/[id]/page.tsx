@@ -1,11 +1,25 @@
-"use client";
+import { db } from "@/db";
+import { games } from "@/db/schema";
+import Game from "@/features/game/components/GamePageClient";
+import { gameWithStateSchema } from "@/shared/schemas/gameSchema";
+import { eq } from "drizzle-orm";
 
-import Game from "@/features/game/components/Game";
-import { useParams } from "next/navigation";
+export default async function GamePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const game = await db.query.games.findFirst({
+    where: eq(games.id, id),
+  });
 
-export default function GamePage() {
-  const { id } = useParams<{ id: string }>();
+  //convert game to GameWithState
+  const parsedState = gameWithStateSchema.safeParse(game);
 
-  console.log("🚀 game id: ", id);
-  return <Game gameId={id} />;
+  if (!parsedState.success) {
+    return <div>Invalid game state</div>;
+  }
+
+  return <Game initialGame={parsedState.data} />;
 }

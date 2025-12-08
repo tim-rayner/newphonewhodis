@@ -5,6 +5,7 @@
  */
 
 import { publicProcedure, router } from "@/external/trpc/init";
+import { getRandomMemeUrl } from "@/features/startGame/queries/router";
 import { z } from "zod";
 import { checkAvailability, joinGame } from "../api/joinGameApi";
 import { joinGameSchema } from "../types/schema";
@@ -14,6 +15,8 @@ export const joinGameRouter = router({
    * Join an existing game
    */
   join: publicProcedure.input(joinGameSchema).mutation(async ({ input }) => {
+    const memeUrl = await getRandomMemeUrl(); // random meme url for the avatar;
+    input.player.avatar = memeUrl;
     const result = await joinGame(input.gameCode, input.player);
     return result;
   }),
