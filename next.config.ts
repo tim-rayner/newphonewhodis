@@ -11,6 +11,28 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Turbopack config (for dev server)
+  turbopack: {
+    rules: {
+      "*.csv": {
+        loaders: ["csv-loader"],
+        as: "*.js",
+      },
+    },
+  },
+  // Webpack config (for production build)
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.csv$/,
+      loader: "csv-loader",
+      options: {
+        dynamicTyping: true,
+        header: true,
+        skipEmptyLines: true,
+      },
+    });
+    return config;
+  },
 };
 
 export default nextConfig;
