@@ -68,7 +68,10 @@ export async function joinGame(
 
   // Add player to game (game is guaranteed to exist here)
   const validGame = game!;
-  (validGame.state as GameSnapshotSchema).players[player.id] = {
+  const state = validGame.state as GameSnapshotSchema;
+
+  // Add player to players record
+  state.players[player.id] = {
     name: player.name,
     avatar: player.avatar ?? null,
     score: 0,
@@ -76,10 +79,13 @@ export async function joinGame(
     isHost: false,
     submittedCard: null,
   };
-  await db
-    .update(games)
-    .set({ state: validGame.state as GameSnapshotSchema })
-    .where(eq(games.id, validGame.id));
+
+  // Add player to playerOrder if not already present
+  if (!state.playerOrder.includes(player.id)) {
+    state.playerOrder.push(player.id);
+  }
+
+  await db.update(games).set({ state }).where(eq(games.id, validGame.id));
 
   return { success: true, data: validGame };
 }

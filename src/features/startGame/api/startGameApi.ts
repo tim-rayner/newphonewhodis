@@ -46,12 +46,14 @@ export async function startGame(
       players: {
         [hostId]: hostPlayer,
       },
+      playerOrder: [hostId],
       round: {
         roundNumber: 0,
         promptCard: null,
         submissions: {},
-        judgeId: hostId,
+        judgeId: null,
         winningPlayerId: null,
+        roundStartAt: null,
       },
       decks: {
         prompts: [],
@@ -61,6 +63,7 @@ export async function startGame(
         maxScore: 7,
         handSize: 7,
       },
+      phase: "LOBBY",
     };
 
     // 4. Create game in DB
