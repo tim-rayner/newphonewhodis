@@ -1,10 +1,10 @@
 "use client";
 
+import { getPromptCard } from "@/features/game/assets/cards";
 import type { GameSnapshotSchema } from "@/features/game/types/schema";
 import { usePlayerIdentity } from "@/features/player/hooks/usePlayerIdentity";
 import { GameWithState } from "@/shared/types/gameTypes";
 import { AnimatePresence, motion } from "framer-motion";
-import { Crown } from "lucide-react";
 import {
   useCallback,
   useEffect,
@@ -16,6 +16,8 @@ import {
 import { useGameActions, useGameChannel } from "../hooks";
 import { ConnectionStatus } from "./ConnectionStatus";
 import { CountdownTimer } from "./CountdownTimer";
+import { GameCodeBadge } from "./mobile/GameCodeBadge";
+import { JudgeBanner } from "./mobile/JudgeBanner";
 import {
   AnsweringPhase,
   DealtPhase,
@@ -44,9 +46,11 @@ export default function GamePageClient({
   const playerId = usePlayerIdentity();
   const previousPhaseRef = useRef<string | null>(null);
   const previousWinnerIdRef = useRef<string | null>(null);
+  const previousPromptRef = useRef<string | null>(null);
   const [winnerRevealData, setWinnerRevealData] = useState<{
     name: string;
     cardId: string;
+    promptText: string;
   } | null>(null);
 
   const { state } = game;
@@ -54,25 +58,42 @@ export default function GamePageClient({
   const isHost = currentPlayer?.isHost ?? false;
   const isJudge = playerId === state.round.judgeId;
 
+  const judgeName = state.round.judgeId
+    ? state.players[state.round.judgeId]?.name || null
+    : null;
+
   // Handle state updates from broadcast - also detect winner transitions
   const handleStateUpdate = useCallback((newState: GameSnapshotSchema) => {
     setGame((prev) => {
       const prevPhase = prev.state.phase;
       const newPhase = newState.phase;
+      const prevPrompt = prev.state.round.promptCard;
 
       // Detect transition from JUDGING to LOBBY (round ended with winner)
       if (prevPhase === "JUDGING" && newPhase === "LOBBY") {
         const winnerId = newState.round.winningPlayerId;
-        if (winnerId && newState.players[winnerId]) {
+        const winningCardId = winnerId
+          ? prev.state.round.submissions[winnerId]
+          : null;
+
+        if (winnerId && newState.players[winnerId] && winningCardId) {
           const winnerPlayer = newState.players[winnerId];
+          const promptCard = prevPrompt ? getPromptCard(prevPrompt) : null;
+
           // Schedule winner reveal after state update
           setTimeout(() => {
             setWinnerRevealData({
               name: winnerPlayer.name,
-              cardId: "winner",
+              cardId: winningCardId,
+              promptText: promptCard?.value || "...",
             });
           }, 0);
         }
+      }
+
+      // Track prompt for winner reveal
+      if (newState.round.promptCard) {
+        previousPromptRef.current = newState.round.promptCard;
       }
 
       return { ...prev, state: newState };
@@ -109,6 +130,9 @@ export default function GamePageClient({
     previousWinnerIdRef.current = state.round.winningPlayerId;
   });
 
+  // Ref to prevent duplicate auto-end calls
+  const autoEndTriggeredRef = useRef(false);
+
   // Calculate time remaining using useSyncExternalStore for clean updates
   const timeSubscribe = useMemo(() => {
     return (callback: () => void) => {
@@ -133,6 +157,49 @@ export default function GamePageClient({
     timeSnapshot
   );
 
+  // Reset auto-end trigger when phase changes away from ANSWERING
+  useEffect(() => {
+    if (state.phase !== "ANSWERING") {
+      autoEndTriggeredRef.current = false;
+    }
+  }, [state.phase]);
+
+  // Auto-end round when timer expires (judge only)
+  useEffect(() => {
+    if (
+      state.phase === "ANSWERING" &&
+      isJudge &&
+      timeRemaining === 0 &&
+      !autoEndTriggeredRef.current &&
+      !actions.isPending
+    ) {
+      autoEndTriggeredRef.current = true;
+      actions.endRound();
+    }
+  }, [state.phase, isJudge, timeRemaining, actions]);
+
+  // Auto-end round when all players have submitted (judge only)
+  useEffect(() => {
+    if (
+      state.phase === "ANSWERING" &&
+      isJudge &&
+      !autoEndTriggeredRef.current &&
+      !actions.isPending
+    ) {
+      const totalPlayers = Object.keys(state.players).length;
+      const submissionCount = Object.keys(state.round.submissions).length;
+      const expectedSubmissions = totalPlayers - 1; // exclude judge
+      if (submissionCount >= expectedSubmissions && expectedSubmissions > 0) {
+        autoEndTriggeredRef.current = true;
+        actions.endRound();
+      }
+    }
+  }, [state.phase, isJudge, state.players, state.round.submissions, actions]);
+
+  // Show judge banner when not in lobby (already shown in lobby component)
+  const showJudgeBanner =
+    state.phase !== "LOBBY" && state.phase !== "FINISHED" && judgeName;
+
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-background to-secondary/20">
       {/* Winner Reveal Overlay */}
@@ -140,36 +207,33 @@ export default function GamePageClient({
         <WinnerReveal
           winnerName={winnerRevealData.name}
           winningCardId={winnerRevealData.cardId}
+          promptText={winnerRevealData.promptText}
           onComplete={() => setWinnerRevealData(null)}
         />
       )}
 
-      {/* Top Bar */}
-      <div className="sticky top-0 z-20 bg-background/80 backdrop-blur-sm border-b">
+      {/* Top Bar - Mobile optimized */}
+      <header className="sticky top-0 z-20 bg-background/95 backdrop-blur-md border-b safe-area-top">
         <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            {/* Game Info */}
-            <div className="flex items-center gap-4">
-              <h1 className="text-xl font-bold hidden sm:block">
-                New Phone Who Dis?
+          <div className="flex items-center justify-between gap-2">
+            {/* Left: Game info */}
+            <div className="flex items-center gap-2 min-w-0 flex-1">
+              {/* Title - hidden on mobile */}
+              <h1 className="text-lg font-bold hidden md:block truncate">
+                NPWD
               </h1>
-              <div className="flex items-center gap-2 text-sm">
-                <span className="px-2 py-1 bg-secondary rounded-md font-medium">
-                  Round {state.round.roundNumber}
-                </span>
-                {state.round.judgeId && (
-                  <div className="flex items-center gap-1 px-2 py-1 bg-amber-100 dark:bg-amber-900/30 rounded-md">
-                    <Crown className="w-3 h-3 text-amber-600 dark:text-amber-400" />
-                    <span className="text-amber-800 dark:text-amber-200 text-xs font-medium">
-                      {state.players[state.round.judgeId]?.name}
-                    </span>
-                  </div>
-                )}
-              </div>
+              {/* Round indicator */}
+              <span className="px-2 py-1 bg-secondary rounded-md text-xs font-medium whitespace-nowrap">
+                R{state.round.roundNumber}
+              </span>
+              {/* Game code - compact on mobile, visible in header for quick sharing */}
+              {state.phase !== "LOBBY" && (
+                <GameCodeBadge gameCode={game.code} variant="compact" />
+              )}
             </div>
 
-            {/* Right side: Timer, Connection, Players */}
-            <div className="flex items-center gap-3">
+            {/* Right: Timer, Connection, Players */}
+            <div className="flex items-center gap-2">
               {state.phase === "ANSWERING" && (
                 <CountdownTimer
                   startTime={state.round.roundStartAt}
@@ -185,15 +249,21 @@ export default function GamePageClient({
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-6 max-w-4xl">
+        {/* Judge Banner - below header */}
+        {showJudgeBanner && (
+          <JudgeBanner judgeName={judgeName} isCurrentUserJudge={isJudge} />
+        )}
+      </header>
+
+      {/* Main Content - Mobile optimized with safe areas */}
+      <main className="container mx-auto px-4 py-6 max-w-lg pb-safe">
         <AnimatePresence mode="wait">
           {state.phase === "LOBBY" && (
             <motion.div key="lobby">
               <LobbyPhase
                 state={state}
+                gameCode={game.code}
                 isHost={isHost}
                 isJudge={isJudge}
                 isPending={actions.isPending}
@@ -246,17 +316,17 @@ export default function GamePageClient({
           )}
         </AnimatePresence>
 
-        {/* Error display */}
+        {/* Error display - mobile friendly */}
         {actions.error && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200 px-4 py-2 rounded-lg shadow-lg"
+            className="fixed bottom-20 left-4 right-4 mx-auto max-w-sm bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-200 px-4 py-3 rounded-xl shadow-lg z-30"
           >
-            {actions.error.message}
+            <p className="text-sm">{actions.error.message}</p>
             <button
               onClick={actions.clearError}
-              className="ml-2 text-red-600 dark:text-red-300 hover:text-red-800 dark:hover:text-red-100"
+              className="mt-2 text-sm font-medium text-red-600 dark:text-red-300 hover:text-red-800 dark:hover:text-red-100"
             >
               Dismiss
             </button>
@@ -264,8 +334,8 @@ export default function GamePageClient({
         )}
       </main>
 
-      {/* Debug: Raw state (collapsible) */}
-      <details className="container mx-auto px-4 py-8 max-w-4xl">
+      {/* Debug: Raw state (collapsible) - hidden by default on mobile */}
+      <details className="container mx-auto px-4 py-8 max-w-lg hidden md:block">
         <summary className="text-sm text-muted-foreground cursor-pointer">
           Debug: Raw State
         </summary>

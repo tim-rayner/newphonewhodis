@@ -59,10 +59,11 @@ export type RoundEndsPayload = BaseEvent;
  * - Awards 1 point to the winning player
  * - Checks if game is over (player reached maxScore)
  * - Replenishes hands for players who submitted
+ * - If winningPlayerId is null/undefined, skips round (no winner)
  */
 export type JudgeVotesPayload = BaseEvent & {
-  /** The player ID whose submission won */
-  winningPlayerId: string;
+  /** The player ID whose submission won. Null/undefined means no winner (skip round). */
+  winningPlayerId?: string | null;
 };
 
 /**
@@ -75,5 +76,3 @@ export type GameEventPayload =
   | PlayerAnswersPayload
   | RoundEndsPayload
   | JudgeVotesPayload;
-
-

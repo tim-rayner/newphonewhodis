@@ -354,11 +354,13 @@ export function handleRoundEnds(
  * Validates:
  * - Phase is JUDGING
  * - Actor is the judge
- * - winningPlayerId submitted a card
+ * - winningPlayerId submitted a card (if provided)
  *
  * Transitions:
  * - JUDGING -> LOBBY (if no winner yet, next round)
  * - JUDGING -> FINISHED (if player reached maxScore)
+ *
+ * If winningPlayerId is null/undefined, skips the round (no winner)
  */
 export function handleJudgeVotes(
   snapshot: GameSnapshotSchema,
@@ -374,23 +376,28 @@ export function handleJudgeVotes(
     throw new UnauthorizedError("Only the judge can vote");
   }
 
-  // Validate winning player submitted a card
-  const winningSubmission = snapshot.round.submissions[payload.winningPlayerId];
-  if (!winningSubmission) {
-    throw new InvalidActionError(
-      "Selected player did not submit a card this round"
-    );
-  }
+  const hasWinner = payload.winningPlayerId != null;
+  let newScore = 0;
 
-  // Award point to winner
-  const winningPlayer = snapshot.players[payload.winningPlayerId];
-  const newScore = winningPlayer.score + 1;
+  // If there's a winner, validate they submitted a card
+  if (hasWinner) {
+    const winningSubmission =
+      snapshot.round.submissions[payload.winningPlayerId!];
+    if (!winningSubmission) {
+      throw new InvalidActionError(
+        "Selected player did not submit a card this round"
+      );
+    }
+    // Award point to winner
+    const winningPlayer = snapshot.players[payload.winningPlayerId!];
+    newScore = winningPlayer.score + 1;
+  }
 
   // Replenish hands for players who submitted (draw 1 card each)
   const newPlayers = { ...snapshot.players };
   const responseDeck = [...snapshot.decks.responses];
 
-  for (const [playerId, cardId] of Object.entries(snapshot.round.submissions)) {
+  for (const [playerId] of Object.entries(snapshot.round.submissions)) {
     const player = snapshot.players[playerId];
     // Give player a new card if deck has cards
     if (responseDeck.length > 0) {
@@ -399,13 +406,19 @@ export function handleJudgeVotes(
         ...player,
         hand: [...player.hand, newCard],
         submittedCard: null, // Reset submitted card
-        score: playerId === payload.winningPlayerId ? newScore : player.score,
+        score:
+          hasWinner && playerId === payload.winningPlayerId
+            ? newScore
+            : player.score,
       };
     } else {
       newPlayers[playerId] = {
         ...player,
         submittedCard: null,
-        score: playerId === payload.winningPlayerId ? newScore : player.score,
+        score:
+          hasWinner && playerId === payload.winningPlayerId
+            ? newScore
+            : player.score,
       };
     }
   }
@@ -418,8 +431,8 @@ export function handleJudgeVotes(
     };
   }
 
-  // Check if game is over
-  const gameOver = newScore >= snapshot.settings.maxScore;
+  // Check if game is over (only if there's a winner)
+  const gameOver = hasWinner && newScore >= snapshot.settings.maxScore;
 
   // Rotate judge for next round
   const nextJudgeId = getNextJudgeId(snapshot);
@@ -433,7 +446,7 @@ export function handleJudgeVotes(
     },
     round: {
       ...snapshot.round,
-      winningPlayerId: payload.winningPlayerId,
+      winningPlayerId: payload.winningPlayerId ?? null,
       judgeId: gameOver ? snapshot.round.judgeId : nextJudgeId,
       // Reset for next round if game continues
       promptCard: gameOver ? snapshot.round.promptCard : null,

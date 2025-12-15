@@ -24,6 +24,14 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
+
+    /* iMessage/WhatsApp theme colors */
+    --message-incoming: 229 229 234;
+    --message-outgoing: 52 199 89;
+    --message-outgoing-imessage: 0 122 255;
+    --phone-frame: 28 28 30;
+    --phone-screen: 0 0 0;
+    --phone-status-bar: 255 255 255;
   }
 
   .dark {
@@ -46,6 +54,14 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+
+    /* iMessage/WhatsApp theme colors - dark mode */
+    --message-incoming: 58 58 60;
+    --message-outgoing: 52 199 89;
+    --message-outgoing-imessage: 10 132 255;
+    --phone-frame: 28 28 30;
+    --phone-screen: 0 0 0;
+    --phone-status-bar: 255 255 255;
   }
 }
 
@@ -55,14 +71,176 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Prevent text size adjustment on orientation change */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
+    /* Prevent pull-to-refresh on mobile */
+    overscroll-behavior-y: contain;
+  }
+
+  /* Improve tap highlight on mobile */
+  button,
+  a,
+  [role="button"] {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
 @layer utilities {
+  /* 3D perspective for card flips */
   .perspective-1000 {
     perspective: 1000px;
   }
   .backface-hidden {
     backface-visibility: hidden;
   }
+
+  /* Safe area utilities for notched devices */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right);
+  }
+  .pb-safe {
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  }
+  .pt-safe {
+    padding-top: max(0.75rem, env(safe-area-inset-top));
+  }
+
+  /* Touch-friendly minimum sizes */
+  .touch-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  .touch-target-sm {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Disable hover effects on touch devices */
+  @media (hover: none) and (pointer: coarse) {
+    .hover\:scale-105:hover {
+      transform: none;
+    }
+    .hover\:bg-secondary:hover {
+      background-color: inherit;
+    }
+  }
+
+  /* Active states for touch devices */
+  @media (hover: none) and (pointer: coarse) {
+    .active\:scale-95:active {
+      transform: scale(0.95);
+    }
+    .active\:scale-98:active {
+      transform: scale(0.98);
+    }
+  }
+
+  /* iMessage bubble colors */
+  .bg-message-incoming {
+    background-color: rgb(var(--message-incoming));
+  }
+  .bg-message-outgoing {
+    background-color: rgb(var(--message-outgoing));
+  }
+  .bg-message-imessage {
+    background-color: rgb(var(--message-outgoing-imessage));
+  }
+
+  /* Phone frame colors */
+  .bg-phone-frame {
+    background-color: rgb(var(--phone-frame));
+  }
+  .bg-phone-screen {
+    background-color: rgb(var(--phone-screen));
+  }
+
+  /* Scrollbar hiding for cleaner mobile UI */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Text selection on mobile */
+  .select-none-mobile {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Smooth momentum scrolling for iOS */
+  .scroll-smooth-ios {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent zoom on input focus on iOS */
+  @supports (-webkit-touch-callout: none) {
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    textarea,
+    select {
+      font-size: 16px;
+    }
+  }
+}
+
+/* Animation keyframes */
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--primary), 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(var(--primary), 0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 2s ease-in-out infinite;
+}
+
+.animate-shake {
+  animation: shake 0.3s ease-in-out;
 }

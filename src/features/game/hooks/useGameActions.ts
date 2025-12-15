@@ -30,7 +30,7 @@ interface UseGameActionsReturn {
   startRound: () => Promise<void>;
   submitCard: (cardId: string) => Promise<void>;
   endRound: () => Promise<void>;
-  vote: (winningPlayerId: string) => Promise<void>;
+  vote: (winningPlayerId?: string | null) => Promise<void>;
 }
 
 /**
@@ -108,7 +108,7 @@ export function useGameActions({
   }, [gameId, playerId, handleAction]);
 
   const vote = useCallback(
-    async (winningPlayerId: string) => {
+    async (winningPlayerId?: string | null) => {
       await handleAction(() =>
         judgeVotes({ gameId, actorId: playerId!, winningPlayerId })
       );

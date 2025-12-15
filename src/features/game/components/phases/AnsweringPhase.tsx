@@ -1,13 +1,18 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getPromptCard } from "@/features/game/assets/cards";
+import {
+  getPromptCard,
+  getReplyDisplayText,
+} from "@/features/game/assets/cards";
 import type { GameSnapshotSchema } from "@/features/game/types/schema";
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Check, Clock, StopCircle } from "lucide-react";
-import { GameCard } from "../GameCard";
-import { PlayerHand } from "../PlayerHand";
+import { CardCarousel } from "../mobile/CardCarousel";
+import { JudgeIndicator } from "../mobile/JudgeBanner";
+import { MessageBubble } from "../mobile/MessageBubble";
+import { PhoneFrame } from "../mobile/PhoneFrame";
 
 interface AnsweringPhaseProps {
   state: GameSnapshotSchema;
@@ -21,6 +26,7 @@ interface AnsweringPhaseProps {
 
 /**
  * Answering phase - players submit their reply cards
+ * Mobile-first design with PhoneFrame and CardCarousel
  */
 export function AnsweringPhase({
   state,
@@ -43,6 +49,12 @@ export function AnsweringPhase({
   const hasSubmitted = currentPlayer?.submittedCard !== null;
   const canSubmit = !isJudge && !hasSubmitted;
 
+  const judgeName = state.round.judgeId
+    ? state.players[state.round.judgeId]?.name
+    : null;
+
+  const isUrgent = timeRemaining !== null && timeRemaining <= 10;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -51,101 +63,143 @@ export function AnsweringPhase({
       transition={{ duration: 0.3 }}
       className="space-y-6"
     >
-      {/* Prompt Card */}
-      <div className="flex justify-center">
-        {promptCard && (
-          <GameCard variant="prompt" text={promptCard.value} size="lg" />
-        )}
-      </div>
+      {/* Timer notification bar */}
+      {timeRemaining !== null && (
+        <motion.div
+          className={cn(
+            "flex items-center justify-center gap-2 py-2 px-4 rounded-full mx-auto w-fit",
+            isUrgent ? "bg-red-500 text-white" : "bg-secondary text-foreground"
+          )}
+          animate={isUrgent ? { scale: [1, 1.02, 1] } : {}}
+          transition={{ repeat: Infinity, duration: 0.5 }}
+        >
+          <Clock className="w-4 h-4" />
+          <span className="font-mono font-bold">{timeRemaining}s</span>
+          <span className="text-sm">remaining</span>
+        </motion.div>
+      )}
 
-      {/* Timer and submission count */}
-      <div className="flex items-center justify-center gap-6">
-        {timeRemaining !== null && (
+      {/* Phone Frame with prompt */}
+      <PhoneFrame
+        hostName={judgeName || "Judge"}
+        isUrgent={isUrgent}
+        variant="compact"
+      >
+        {promptCard && (
+          <MessageBubble
+            type="prompt"
+            text={promptCard.value}
+            isRead
+            delay={0.2}
+          />
+        )}
+
+        {/* Typing indicator or submission count */}
+        {!isJudge && !hasSubmitted && (
           <motion.div
-            className={`flex items-center gap-2 px-4 py-2 rounded-full ${
-              timeRemaining <= 10
-                ? "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300"
-                : "bg-secondary"
-            }`}
-            animate={timeRemaining <= 10 ? { scale: [1, 1.05, 1] } : {}}
-            transition={{ repeat: Infinity, duration: 1 }}
+            className="self-end text-[10px] text-[#8e8e93] mt-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
           >
-            <Clock className="w-4 h-4" />
-            <span className="font-mono font-bold">{timeRemaining}s</span>
+            Choose a reply card below...
           </motion.div>
         )}
 
-        <div className="flex items-center gap-2 px-4 py-2 bg-secondary rounded-full">
-          <Check className="w-4 h-4" />
-          <span>
-            {submissionCount} / {expectedSubmissions} submitted
-          </span>
-        </div>
+        {hasSubmitted && currentPlayer?.submittedCard && (
+          <MessageBubble
+            type="reply"
+            text={getReplyDisplayText(currentPlayer.submittedCard)}
+            isDelivered
+            isRead
+            delay={0.3}
+          />
+        )}
+      </PhoneFrame>
+
+      {/* Submission count */}
+      <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+        <Check className="w-4 h-4" />
+        <span>
+          {submissionCount} / {expectedSubmissions} players answered
+        </span>
       </div>
 
       {/* Judge view */}
       {isJudge && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Players are answering...</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex flex-wrap gap-2 justify-center">
-              {Object.entries(state.players)
-                .filter(([id]) => id !== state.round.judgeId)
-                .map(([id, player]) => {
-                  const hasSubmitted = !!state.round.submissions[id];
-                  return (
-                    <motion.div
-                      key={id}
-                      className={`px-3 py-1 rounded-full text-sm ${
-                        hasSubmitted
-                          ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300"
-                          : "bg-secondary text-muted-foreground"
-                      }`}
-                      animate={hasSubmitted ? { scale: [1, 1.1, 1] } : {}}
-                      transition={{ duration: 0.3 }}
-                    >
-                      {player.name}
-                      {hasSubmitted && " ✓"}
-                    </motion.div>
-                  );
-                })}
-            </div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-4 p-4 bg-secondary/30 rounded-2xl"
+        >
+          <div className="flex items-center justify-center">
+            <JudgeIndicator judgeName={judgeName} isCurrentUserJudge={true} />
+          </div>
 
-            <div className="flex justify-center">
-              <Button
-                onClick={onEndRound}
-                disabled={isPending || submissionCount === 0}
-                variant="destructive"
-                className="gap-2"
-              >
-                <StopCircle className="w-4 h-4" />
-                End Answering Phase
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+          <h3 className="text-center font-medium">Waiting for responses...</h3>
+
+          {/* Player submission status */}
+          <div className="flex flex-wrap gap-2 justify-center">
+            {Object.entries(state.players)
+              .filter(([id]) => id !== state.round.judgeId)
+              .map(([id, player]) => {
+                const playerHasSubmitted = !!state.round.submissions[id];
+                return (
+                  <motion.div
+                    key={id}
+                    className={cn(
+                      "px-3 py-1.5 rounded-full text-sm font-medium",
+                      playerHasSubmitted
+                        ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300"
+                        : "bg-secondary text-muted-foreground"
+                    )}
+                    animate={playerHasSubmitted ? { scale: [1, 1.05, 1] } : {}}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {player.name}
+                    {playerHasSubmitted && (
+                      <Check className="w-3 h-3 inline ml-1" />
+                    )}
+                  </motion.div>
+                );
+              })}
+          </div>
+
+          <div className="flex justify-center pt-2">
+            <Button
+              onClick={onEndRound}
+              disabled={isPending || submissionCount === 0}
+              variant="destructive"
+              size="lg"
+              className="gap-2 min-h-[48px]"
+            >
+              <StopCircle className="w-4 h-4" />
+              End Answering Phase
+            </Button>
+          </div>
+        </motion.div>
       )}
 
-      {/* Player hand */}
+      {/* Player card carousel */}
       {!isJudge && currentPlayer && (
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              {hasSubmitted ? "Card Submitted!" : "Choose your reply"}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <PlayerHand
-              cardIds={currentPlayer.hand}
-              canSubmit={canSubmit}
-              submittedCardId={currentPlayer.submittedCard}
-              onSubmit={onSubmitCard}
-              isPending={isPending}
-            />
-          </CardContent>
-        </Card>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="space-y-4"
+        >
+          <h3 className="text-center text-lg font-semibold">
+            {hasSubmitted ? "Card Submitted!" : "Choose your reply"}
+          </h3>
+
+          <CardCarousel
+            cardIds={currentPlayer.hand}
+            canSubmit={canSubmit}
+            submittedCardId={currentPlayer.submittedCard}
+            onSubmit={onSubmitCard}
+            isPending={isPending}
+          />
+        </motion.div>
       )}
     </motion.div>
   );
