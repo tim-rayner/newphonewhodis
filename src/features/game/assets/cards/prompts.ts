@@ -1,16 +1,9 @@
-// Prompt card loader - parses CSV and provides lookup map and deck shuffler
-import {
-  parseCardRow,
-  type PromptCard,
-  type RawCardRow,
-  shuffleArray,
-} from "@/features/card";
-import PROMPT_DATA from "./prompts-data.csv";
+// Prompt card loader - provides lookup map and deck shuffler
+import { type PromptCard, shuffleArray } from "@/features/card";
+import PROMPT_DATA from "./prompts-data.json";
 
-// Parse all prompt cards from CSV
-const promptCards: PromptCard[] = (PROMPT_DATA as unknown as RawCardRow[])
-  .filter((row) => row.id && row.id.startsWith("prompt_"))
-  .map((row) => parseCardRow(row) as PromptCard);
+// Cast imported JSON to typed array
+const promptCards: PromptCard[] = PROMPT_DATA as PromptCard[];
 
 // Lookup map: id -> PromptCard
 export const PROMPT_CARDS_BY_ID = new Map<string, PromptCard>(

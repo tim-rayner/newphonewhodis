@@ -1,16 +1,9 @@
-// Reply card loader - parses CSV and provides lookup map and deck shuffler
-import {
-  parseCardRow,
-  type RawCardRow,
-  type ReplyCard,
-  shuffleArray,
-} from "@/features/card";
-import REPLY_DATA from "./replies-data.csv";
+// Reply card loader - provides lookup map and deck shuffler
+import { type ReplyCard, shuffleArray } from "@/features/card";
+import REPLY_DATA from "./replies-data.json";
 
-// Parse all reply cards from CSV
-const replyCards: ReplyCard[] = (REPLY_DATA as unknown as RawCardRow[])
-  .filter((row) => row.id && row.id.startsWith("reply_"))
-  .map((row) => parseCardRow(row) as ReplyCard);
+// Cast imported JSON to typed array
+const replyCards: ReplyCard[] = REPLY_DATA as ReplyCard[];
 
 // Lookup map: id -> ReplyCard
 export const REPLY_CARDS_BY_ID = new Map<string, ReplyCard>(
@@ -32,4 +25,14 @@ export function getReplyCard(id: string): ReplyCard | undefined {
   return REPLY_CARDS_BY_ID.get(id);
 }
 
-
+// Get display text for a card - handles text cards, image cards, and missing cards
+export function getReplyDisplayText(
+  cardOrId: ReplyCard | string | undefined
+): string {
+  const card = typeof cardOrId === "string" ? getReplyCard(cardOrId) : cardOrId;
+  if (!card) return typeof cardOrId === "string" ? cardOrId : "???";
+  if (card.value) return card.value;
+  if (card.img)
+    return `📷 ${card.img.replace(/\.[^.]+$/, "").replace(/_/g, " ")}`;
+  return card.id;
+}

@@ -1,0 +1,452 @@
+[
+  {
+    "id": "prompt_1e63be1c-24c7-431a-8b6f-92af72144bb1",
+    "value": "You don’t know me, but this felt like the right number to message.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_4d8be5f7-f34e-4e09-9f91-0240e589c6df",
+    "value": "I'm having a moment and need guidance. Thoughts?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_7cb41f1c-7b93-4c7f-8fbf-e2b17333e998",
+    "value": "Long story short… what should I do next?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_0ec4fb32-7b2c-4dbf-8e29-53895ac6e1d9",
+    "value": "Serious question: does this seem normal to you?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_266f7003-97c3-48ad-9830-f5222101c7b1",
+    "value": "Someone gave me your number and said you’d know what to say.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_08a4c46d-6f5e-4e97-9d0d-5745d76dbaf2",
+    "value": "I shouldn't be texting this but… here we are.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_3d04f1ea-bfae-4b1b-8b30-fb6e4cbe8dc8",
+    "value": "Rate the situation:",
+    "type": "prompt",
+    "img": "mysterious_smudge.jpg"
+  },
+  {
+    "id": "prompt_ae81e51e-a2c1-4ee2-a36c-85d15964009a",
+    "value": "Can you help me interpret this?",
+    "type": "prompt",
+    "img": "weird_stain.png"
+  },
+  {
+    "id": "prompt_1ab50a02-36c5-4b03-a77a-b9cd68e99665",
+    "value": "This isn’t what I expected to find today.",
+    "type": "prompt",
+    "img": "strange_object.jpg"
+  },
+  {
+    "id": "prompt_6b9e09e1-4678-4fd1-8cb4-8e038158adf2",
+    "value": "Be honest… should I be worried about this?",
+    "type": "prompt",
+    "img": "shadow_in_hallway.jpg"
+  },
+  {
+    "id": "prompt_aa07604f-bf7c-4a0d-9cb7-0ea00b8f76b8",
+    "value": "Someone told me you give ‘unfiltered advice.’ True?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_81030fe1-6273-4f8e-aafa-f8bb7fa3b365",
+    "value": "I need a reaction. Any reaction.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_657f35c2-e812-44d1-aae5-07c63df981fc",
+    "value": "This might be a mistake, but what do you think?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_98b80c81-97c0-4bc2-9de5-d881fcc00fc1",
+    "value": "I was about to send this to my therapist but accidentally sent it here instead.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_72a91bcc-381e-4e20-9af6-95342eb2d06e",
+    "value": "I don't know how to feel about this.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_df8c6f3c-4ff6-4c5c-a434-76d9c9c89f7a",
+    "value": "Thoughts? Opinions? Emotional damage?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_bcf2375d-dd2d-40a3-8f35-7564768c2210",
+    "value": "Quick question: what would ANY sane person reply to this?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_370efc3e-d355-4f4e-8b8e-3e42e68312a8",
+    "value": "I feel like this requires a response. Your turn.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_f5d1f4c3-9114-4b3f-97bb-12e979ba44fc",
+    "value": "I'm too embarrassed to show anyone else this.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_c1d0e479-4ef0-4162-bfc2-38a705412f53",
+    "value": "Can you explain this energy I'm giving off right now?",
+    "type": "prompt",
+    "img": "unhinged_selfie.png"
+  },
+  {
+    "id": "prompt_7dd49fb7-ad02-4bfc-924c-bca4352b4f77",
+    "value": "I panicked and texted the first number I saw. Solve this:",
+    "type": "prompt",
+    "img": "suspicious_note.jpg"
+  },
+  {
+    "id": "prompt_fcb865a0-1c65-4bf1-b0a8-5c83cb1fbe49",
+    "value": "Why does this feel illegal?",
+    "type": "prompt",
+    "img": "cryptic_postit.png"
+  },
+  {
+    "id": "prompt_0a9ec7c3-738d-4708-a3ff-11bdf65e8587",
+    "value": "This was left on my doorstep. Interpret it:",
+    "type": "prompt",
+    "img": "tiny_mysterious_box.jpg"
+  },
+  {
+    "id": "prompt_2bb79ee7-cacc-47ff-a33e-9f050c388306",
+    "value": "I'm not emotionally strong enough to process this alone.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_818c1688-0b02-48f2-a3f7-a3170a4ae353",
+    "value": "Someone said you'd have a funny response to this.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_52475dbd-cfc6-4a09-9bb9-2f512db84504",
+    "value": "I need an opinion from someone unbiased… ish.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_152b4034-cf35-442d-8d4b-f8c0b4a2e9e6",
+    "value": "You seem like the type of person who'd understand.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_0b847291-1346-42f0-b48e-68116ecf40a8",
+    "value": "This message has no context. Make some.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_d4a85356-a746-4bdb-a94c-474a59c0d33f",
+    "value": "On a scale from normal to deeply concerning… where does this land?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_6df6c344-d8eb-463b-a096-0445292899bb",
+    "value": "Tell me how I'm supposed to react to this.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_4bfeb813-a45e-43bb-a8be-f94925c972e7",
+    "value": "I found this in my pocket and I'm scared you’ll understand it.",
+    "type": "prompt",
+    "img": "weird_ticket.png"
+  },
+  {
+    "id": "prompt_7fd6eac8-bd6a-4eac-b32b-97a0e11da313",
+    "value": "Honest answer only: what would YOU reply?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_b5d46a44-73df-4ae1-8203-f3b699f61204",
+    "value": "Imagine this text came from your worst enemy. Now reply accordingly.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_62df0c29-43b7-4ac3-9b51-165cd42d15ca",
+    "value": "What's the official response to chaos?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_7434ec7b-ef93-4eb3-a9a7-88f995855eb9",
+    "value": "I need a comeback that won’t get me arrested.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_6e9e849a-1948-4d7a-a4fa-90f61ee19baa",
+    "value": "I don't know why, but this feels like your problem now.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_f5e0245e-b8c6-4a93-9a03-54cd0999f1ed",
+    "value": "This feels like a moment for wisdom. Or stupidity. Dealer’s choice.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_4b70de6e-ce8e-4fea-8f3b-e1434eda71c3",
+    "value": "Here’s the situation:",
+    "type": "prompt",
+    "img": "blurry_creature.jpg"
+  },
+  {
+    "id": "prompt_5f35bd59-ef3e-4209-99f0-4b4f839e3523",
+    "value": "Whatever your first instinct is: text that.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_e5fa2a0e-75d7-48dc-9f1f-7b528ff06932",
+    "value": "Someone told me this number gives iconic reactions.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_acf5c8c5-2ba7-4dc9-b929-906cdbc02dcd",
+    "value": "Explain the vibe I'm giving off from this:",
+    "type": "prompt",
+    "img": "accidental_selfie.png"
+  },
+  {
+    "id": "prompt_81ebf6b3-8ea4-4d9d-91fe-7f4d66993caa",
+    "value": "If this isn't your vibe, pretend it is.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_f0b72fb9-019f-421e-a12c-590f31d1d5cd",
+    "value": "My brain refused to handle this alone.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_61a2cee4-d047-400e-9e63-b35b4b62d673",
+    "value": "Someone dared me to text a stranger. Now it's your problem.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_4e70a5ab-1b0b-4540-887b-b808af188091",
+    "value": "This seems like something you'd know how to respond to.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_1b002ef0-1b03-46b9-939b-b61f5415b0ff",
+    "value": "What would YOU reply if you got this from a random number?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_31731592-6f91-4ade-a935-76e40a94684e",
+    "value": "I feel like the universe wants your input on this.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_e10dca96-6eae-4fd7-a930-a42ca13e9d51",
+    "value": "Give me a reply that changes absolutely nothing but feels powerful.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_2fcbc64b-7b05-4af1-aa04-4ba2ea903e36",
+    "value": "Not sure how to explain this one. You'll figure it out.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_6881c8f2-84c7-42f7-99ee-07af6dc70252",
+    "value": "I just need someone to respond so I don't feel insane.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_1e5c65ac-d7bc-4ac5-a82d-196e7e5ef679",
+    "value": "Here’s a mystery for you:",
+    "type": "prompt",
+    "img": "abandoned_giftbox.jpg"
+  },
+  {
+    "id": "prompt_4f8b94e4-cd2b-42a2-863f-86eda2778b55",
+    "value": "What’s the correct emotional response to this?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_9f3da0ec-14fb-4aec-8a46-76ad35851988",
+    "value": "I’m not sure what this means but someone said you'd get it.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_3ce0efd3-7a92-40a6-b60b-00e5e6f779cc",
+    "value": "Pick any vibe and commit to it. Respond accordingly.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_200349d4-03f7-4ac5-8d0a-8973f8fb6fd2",
+    "value": "Here’s an image. Make sense of it:",
+    "type": "prompt",
+    "img": "confusing_diagram.png"
+  },
+  {
+    "id": "prompt_7a4e4d57-6b82-40c2-9c3f-3efc55cc153d",
+    "value": "Someone told me you’re the only one who can explain this Christmas situation.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_692e2f90-8f88-4c60-9b06-671449e9e02d",
+    "value": "Is this a normal festive thing or should I call someone?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_4cb8ce42-2ad6-4f44-9c39-e167d31aff20",
+    "value": "Be honest… does this scream ‘holiday magic’ or ‘holiday crime’?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dd7d3c2b-f73e-4b33-b987-0f393bcde597",
+    "value": "I found this under my tree and I don’t think it’s meant for me.",
+    "type": "prompt",
+    "img": "mystery_present.jpg"
+  },
+  {
+    "id": "prompt_90bd3c45-a5c9-49d5-9ab2-4eca9839134f",
+    "value": "If you got this message on Christmas Eve, what would you reply?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_3a5f1f23-c0d6-4cdd-99d8-c4644e31068f",
+    "value": "Santa said someone from this number was ‘on thin ice.’ Thoughts?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_112bdca9-115b-4bd5-ae1a-f81c3e851994",
+    "value": "I can't tell if this is festive or threatening. Help.",
+    "type": "prompt",
+    "img": "menacing_elf.jpg"
+  },
+  {
+    "id": "prompt_a83cb553-ca27-4fd8-a096-3289a5783fa2",
+    "value": "Your name came up during a Christmas emergency meeting. Confirm or deny.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_08c17cc3-8f70-4e94-ab4e-c077ebedf3c0",
+    "value": "Someone left this in my stocking. Interpret it:",
+    "type": "prompt",
+    "img": "weird_candy.png"
+  },
+  {
+    "id": "prompt_dfb5b175-2693-4744-8e7b-9461a36f99fb",
+    "value": "This might sound weird but… what does Christmas FEEL like to you?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_c9cdaec2-bdd6-438b-912b-09930c2d8cde",
+    "value": "If this Christmas text was meant for someone else, what should I pretend to say?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_0a9291b1-c0df-41cf-91f2-d4b56555c0bf",
+    "value": "I swear the tree moved. What’s the protocol here?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_42be26db-297f-4aba-a582-4b4090039a3f",
+    "value": "Is there a polite way to respond to this kind of festive chaos?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_f0f418e6-1a2c-44b3-887a-2dd161fed3df",
+    "value": "The reindeer won’t stop staring at me. Am I the problem?",
+    "type": "prompt",
+    "img": "judgmental_reindeer.jpg"
+  },
+  {
+    "id": "prompt_6b95ecbb-b8be-46c6-b838-e48e23a1fc99",
+    "value": "Someone said you'd know what to reply to a Christmas disaster.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_9e692691-c203-4da3-9538-37f6bb7c4eae",
+    "value": "This might be a festive emergency. Or not. Hard to tell.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_1faa5c8d-fdd4-47f3-a2af-0f7c1e794a73",
+    "value": "On a scale from ‘cosy’ to ‘call the police,’ how do I respond to this?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_22f1b8a5-01ac-4dda-b55d-7e04843e4d27",
+    "value": "I found this cookie and now nothing makes sense.",
+    "type": "prompt",
+    "img": "suspicious_cookie.jpg"
+  },
+  {
+    "id": "prompt_7f7df5d2-1b51-4b28-8099-f08c243f8460",
+    "value": "Someone dressed as Santa just ran past me screaming your name.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_01734865-a759-4cce-bdb1-a31e5bbef2cb",
+    "value": "I need a festive reply that doesn’t make me look unhinged. Good luck.",
+    "type": "prompt",
+    "img": null
+  }
+]

@@ -1,5 +1,9 @@
 import { db } from "@/db";
 import { games } from "@/db/schema";
+import {
+  getShuffledPromptDeck,
+  getShuffledReplyDeck,
+} from "@/features/game/assets/cards";
 import type { GameSnapshotSchema } from "@/features/game/types/schema";
 import type { Game } from "@/shared/types/gameTypes";
 import { eq } from "drizzle-orm";
@@ -20,18 +24,24 @@ export async function startGame(
   avatar?: string
 ): Promise<StartGameResult> {
   try {
+    console.log("------ Looking for existing game with hostId: ", hostId);
     // 1. Check if a game already exists with the same hostId
     const existingGame = await db.query.games.findFirst({
       where: eq(games.hostId, hostId),
     });
+    console.log("------ Existing game found: ", existingGame);
     if (existingGame) {
       throw new Error("You are already in a game");
     }
 
+    console.log("------ No existing game found with hostId: ", hostId);
+
     // 2. Generate a unique game code
     const code = await generateUniqueGameCode();
 
-    // 3. Build host player entry
+    console.log("------ Generated unique game code: ", code);
+
+    // 3. Build host player record entry
     const hostPlayer = {
       name,
       avatar: avatar ?? null,
@@ -40,6 +50,8 @@ export async function startGame(
       submittedCard: null,
       isHost: true,
     };
+
+    console.log("------ Built host player record entry: ", hostPlayer);
 
     // 3. Build initial state snapshot
     const initialState: GameSnapshotSchema = {
@@ -56,8 +68,8 @@ export async function startGame(
         roundStartAt: null,
       },
       decks: {
-        prompts: [],
-        responses: [],
+        prompts: getShuffledPromptDeck(),
+        responses: getShuffledReplyDeck(),
       },
       settings: {
         maxScore: 7,
@@ -80,6 +92,14 @@ export async function startGame(
 
     return { success: true, data: game };
   } catch (error) {
+    // Log full error details for debugging
+    console.error("Full error object:", error);
+    console.error(
+      "Error name:",
+      error instanceof Error ? error.name : "Unknown"
+    );
+    console.error("Error cause:", (error as Error)?.cause);
+
     const message = error instanceof Error ? error.message : "Unknown error";
     logger.log(message);
 

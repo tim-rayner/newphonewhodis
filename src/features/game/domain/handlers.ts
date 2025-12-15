@@ -2,10 +2,6 @@
 // Each handler: (snapshot, payload) => newSnapshot
 // All validation and game rules live here - never trust the client
 
-import {
-  getShuffledPromptDeck,
-  getShuffledReplyDeck,
-} from "@/features/game/assets/cards";
 import type {
   JudgeDealsPayload,
   JudgePickedPayload,
@@ -159,36 +155,42 @@ export function handleJudgeDeals(
   const { handSize } = snapshot.settings;
   const playerIds = Object.keys(snapshot.players);
 
-  // Initialize decks if empty (shuffle fresh decks)
-  let promptDeck = [...snapshot.decks.prompts];
-  let responseDeck = [...snapshot.decks.responses];
+  // Copy decks (pre-populated at game creation)
+  const promptDeck = [...snapshot.decks.prompts];
+  const responseDeck = [...snapshot.decks.responses];
 
-  if (promptDeck.length === 0) {
-    promptDeck = getShuffledPromptDeck();
-  }
-  if (responseDeck.length === 0) {
-    responseDeck = getShuffledReplyDeck();
-  }
-
-  // Calculate how many cards we need
-  const cardsNeeded = playerIds.length * handSize;
-  if (responseDeck.length < cardsNeeded) {
-    throw new InvalidActionError(
-      `Not enough response cards in deck. Need ${cardsNeeded}, have ${responseDeck.length}`
-    );
-  }
-
-  // Deal cards to each player
+  // Only deal fresh hands on the first round
+  const isFirstRound = snapshot.round.roundNumber === 0;
   const newPlayers = { ...snapshot.players };
-  for (const playerId of playerIds) {
-    const player = snapshot.players[playerId];
-    // Deal handSize cards from the deck
-    const hand = responseDeck.splice(0, handSize);
-    newPlayers[playerId] = {
-      ...player,
-      hand,
-      submittedCard: null, // Reset for new round
-    };
+
+  if (isFirstRound) {
+    // Calculate how many cards we need
+    const cardsNeeded = playerIds.length * handSize;
+    if (responseDeck.length < cardsNeeded) {
+      throw new InvalidActionError(
+        `Not enough response cards in deck. Need ${cardsNeeded}, have ${responseDeck.length}`
+      );
+    }
+
+    // Deal cards to each player
+    for (const playerId of playerIds) {
+      const player = snapshot.players[playerId];
+      const hand = responseDeck.splice(0, handSize);
+      newPlayers[playerId] = {
+        ...player,
+        hand,
+        submittedCard: null,
+      };
+    }
+  } else {
+    // Subsequent rounds: just reset submittedCard, keep existing hands
+    for (const playerId of playerIds) {
+      const player = snapshot.players[playerId];
+      newPlayers[playerId] = {
+        ...player,
+        submittedCard: null,
+      };
+    }
   }
 
   // Draw prompt card
@@ -386,7 +388,7 @@ export function handleJudgeVotes(
 
   // Replenish hands for players who submitted (draw 1 card each)
   const newPlayers = { ...snapshot.players };
-  let responseDeck = [...snapshot.decks.responses];
+  const responseDeck = [...snapshot.decks.responses];
 
   for (const [playerId, cardId] of Object.entries(snapshot.round.submissions)) {
     const player = snapshot.players[playerId];
@@ -441,5 +443,3 @@ export function handleJudgeVotes(
     phase: gameOver ? "FINISHED" : "LOBBY",
   };
 }
-
-

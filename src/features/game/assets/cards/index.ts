@@ -12,10 +12,9 @@ export {
   REPLY_CARDS_BY_ID,
   getAllReplyIds,
   getReplyCard,
+  getReplyDisplayText,
   getShuffledReplyDeck,
 } from "./replies";
 
 // Re-export types from the card feature
 export type { Card, PromptCard, ReplyCard } from "@/features/card";
-
-

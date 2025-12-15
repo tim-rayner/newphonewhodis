@@ -2,6 +2,7 @@
 
 import { db } from "@/db";
 import { games } from "@/db/schema";
+import { broadcastGameState } from "@/external/supabase/broadcast";
 import { handleRoundStarts } from "@/features/game/domain/handlers";
 import type { RoundStartsPayload } from "@/features/game/types/events";
 import type { GameSnapshotSchema } from "@/features/game/types/schema";
@@ -26,7 +27,7 @@ export async function roundStarts(payload: RoundStartsPayload) {
     .set({ state: newSnapshot })
     .where(eq(games.id, payload.gameId));
 
+  await broadcastGameState(payload.gameId, newSnapshot);
+
   return { success: true };
 }
-
-
