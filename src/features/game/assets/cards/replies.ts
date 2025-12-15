@@ -32,6 +32,10 @@ export function getReplyDisplayText(
   const card = typeof cardOrId === "string" ? getReplyCard(cardOrId) : cardOrId;
   if (!card) return typeof cardOrId === "string" ? cardOrId : "???";
   if (card.value) return card.value;
+  // GIF-only cards (img === "gif" with no value) should show empty text
+  // The GIF will be displayed separately by the component
+  if (card.img === "gif") return "";
+  // Other image cards show the image filename
   if (card.img)
     return `📷 ${card.img.replace(/\.[^.]+$/, "").replace(/_/g, " ")}`;
   return card.id;

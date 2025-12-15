@@ -76,6 +76,7 @@ export async function startGame(
         handSize: 7,
       },
       phase: "LOBBY",
+      gifUrls: {},
     };
 
     // 4. Create game in DB

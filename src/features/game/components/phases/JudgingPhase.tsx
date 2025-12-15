@@ -2,7 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  cardHasImage,
   getPromptCard,
+  getReplyCard,
   getReplyDisplayText,
 } from "@/features/game/assets/cards";
 import type { GameSnapshotSchema } from "@/features/game/types/schema";
@@ -10,8 +12,8 @@ import { cn } from "@/lib/utils";
 import { AnimatePresence, motion, PanInfo, useAnimation } from "framer-motion";
 import { ChevronLeft, ChevronRight, Crown, SkipForward } from "lucide-react";
 import { useCallback, useState } from "react";
+import { ImageMessage } from "../mobile/ImageMessage";
 import { JudgeIndicator } from "../mobile/JudgeBanner";
-import { MessageBubble } from "../mobile/MessageBubble";
 import { PhoneFrame } from "../mobile/PhoneFrame";
 
 interface JudgingPhaseProps {
@@ -92,9 +94,11 @@ export function JudgingPhase({
 
         <PhoneFrame hostName={judgeName || "Judge"} variant="compact">
           {promptCard && (
-            <MessageBubble
+            <ImageMessage
               type="prompt"
               text={promptCard.value}
+              cardId={promptCard.id}
+              hasImage={cardHasImage(promptCard)}
               isRead
               delay={0.2}
             />
@@ -156,9 +160,11 @@ export function JudgingPhase({
 
         <PhoneFrame hostName={judgeName || "Judge"} variant="compact">
           {promptCard && (
-            <MessageBubble
+            <ImageMessage
               type="prompt"
               text={promptCard.value}
+              cardId={promptCard.id}
+              hasImage={cardHasImage(promptCard)}
               isRead
               delay={0.2}
             />
@@ -259,6 +265,8 @@ export function JudgingPhase({
             {submissions.map(([playerId, cardId], index) => {
               if (index !== currentIndex) return null;
 
+              const replyCard = getReplyCard(cardId);
+
               return (
                 <motion.div
                   key={playerId}
@@ -274,16 +282,20 @@ export function JudgingPhase({
                       showHeader={true}
                     >
                       {promptCard && (
-                        <MessageBubble
+                        <ImageMessage
                           type="prompt"
                           text={promptCard.value}
+                          cardId={promptCard.id}
+                          hasImage={cardHasImage(promptCard)}
                           isRead
                         />
                       )}
 
-                      <MessageBubble
+                      <ImageMessage
                         type="reply"
                         text={getReplyDisplayText(cardId)}
+                        cardId={cardId}
+                        hasImage={cardHasImage(replyCard)}
                         isDelivered
                         isRead
                         delay={0.2}

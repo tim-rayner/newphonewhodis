@@ -43,6 +43,8 @@ export const gameSnapshotSchema = z.object({
     handSize: z.number(),
   }),
   phase: gamePhaseSchema,
+  // Map of cardId -> gifUrl for GIF cards (assigned server-side when dealt)
+  gifUrls: z.record(z.string(), z.string()).default({}),
 });
 
 export type GameSnapshotSchema = z.infer<typeof gameSnapshotSchema>;

@@ -2,13 +2,17 @@
 
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { Check, CheckCheck } from "lucide-react";
+import { Check, CheckCheck, Loader2 } from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
 
 type MessageType = "prompt" | "reply";
 
 interface MessageBubbleProps {
   type: MessageType;
   text: string;
+  gifUrl?: string | null;
+  isGifLoading?: boolean;
   timestamp?: string;
   isDelivered?: boolean;
   isRead?: boolean;
@@ -23,10 +27,13 @@ interface MessageBubbleProps {
  * iMessage/WhatsApp style message bubble
  * - Prompts: Gray bubble, left-aligned (incoming)
  * - Replies: Green/Blue bubble, right-aligned (outgoing)
+ * - Supports optional GIF images above text
  */
 export function MessageBubble({
   type,
   text,
+  gifUrl,
+  isGifLoading = false,
   timestamp,
   isDelivered = true,
   isRead = false,
@@ -37,6 +44,8 @@ export function MessageBubble({
   delay = 0,
 }: MessageBubbleProps) {
   const isPrompt = type === "prompt";
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const hasGif = gifUrl || isGifLoading;
 
   // Format current time if no timestamp provided
   const displayTime =
@@ -65,7 +74,10 @@ export function MessageBubble({
       {/* Message bubble */}
       <motion.div
         className={cn(
-          "relative px-4 py-2.5 rounded-2xl",
+          "relative rounded-2xl overflow-hidden",
+          // Add padding only when there's no GIF or text exists
+          !hasGif && "px-4 py-2.5",
+          hasGif && "pb-0",
           // Prompt (incoming) styles
           isPrompt && "bg-[#3a3a3c] text-white rounded-bl-md",
           // Reply (outgoing) styles - iMessage green
@@ -80,10 +92,48 @@ export function MessageBubble({
         onClick={onClick}
         whileTap={onClick ? { scale: 0.98 } : undefined}
       >
+        {/* GIF Image */}
+        {hasGif && (
+          <div className="relative w-full min-h-[120px] max-h-[200px] bg-black/20">
+            {isGifLoading ? (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Loader2 className="w-8 h-8 animate-spin text-white/50" />
+              </div>
+            ) : gifUrl ? (
+              <>
+                {!imageLoaded && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Loader2 className="w-6 h-6 animate-spin text-white/50" />
+                  </div>
+                )}
+                <Image
+                  src={gifUrl}
+                  alt="GIF"
+                  width={200}
+                  height={150}
+                  className={cn(
+                    "w-full h-auto object-cover transition-opacity duration-200",
+                    imageLoaded ? "opacity-100" : "opacity-0"
+                  )}
+                  onLoad={() => setImageLoaded(true)}
+                  unoptimized // GIFs need to be unoptimized to animate
+                />
+              </>
+            ) : null}
+          </div>
+        )}
+
         {/* Message text */}
-        <p className="text-[15px] leading-snug whitespace-pre-wrap break-words">
-          {text}
-        </p>
+        {text && (
+          <p
+            className={cn(
+              "text-[15px] leading-snug whitespace-pre-wrap break-words",
+              hasGif ? "px-4 py-2.5" : ""
+            )}
+          >
+            {text}
+          </p>
+        )}
 
         {/* Bubble tail */}
         <div

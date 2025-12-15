@@ -1,10 +1,16 @@
 "use client";
 
-import { getReplyDisplayText } from "@/features/game/assets/cards";
+import {
+  cardHasImage,
+  getReplyCard,
+  getReplyDisplayText,
+} from "@/features/game/assets/cards";
+import { useGifCacheContext } from "@/features/game/context";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion, PanInfo, useAnimation } from "framer-motion";
-import { Check, ChevronLeft, ChevronRight } from "lucide-react";
-import { useCallback, useState } from "react";
+import { Check, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import Image from "next/image";
+import { useCallback, useEffect, useState } from "react";
 
 interface CardCarouselProps {
   cardIds: string[];
@@ -80,6 +86,7 @@ export function CardCarousel({
           <span className="text-sm font-medium">Card Submitted!</span>
         </div>
         <ReplyCard
+          cardId={submittedCardId}
           text={getReplyDisplayText(submittedCardId)}
           isSubmitted
           size="lg"
@@ -168,6 +175,7 @@ export function CardCarousel({
                   }}
                 >
                   <ReplyCard
+                    cardId={cardId}
                     text={getReplyDisplayText(cardId)}
                     isSelected={selectedCardId === cardId}
                     isActive={isActive}
@@ -232,6 +240,7 @@ export function CardCarousel({
  * Individual reply card component for the carousel
  */
 interface ReplyCardProps {
+  cardId: string;
   text: string;
   isSelected?: boolean;
   isActive?: boolean;
@@ -242,6 +251,7 @@ interface ReplyCardProps {
 }
 
 function ReplyCard({
+  cardId,
   text,
   isSelected = false,
   isActive = true,
@@ -250,10 +260,50 @@ function ReplyCard({
   disabled = false,
   size = "md",
 }: ReplyCardProps) {
+  const { getGifForCard, getCachedGif } = useGifCacheContext();
+  const card = getReplyCard(cardId);
+  const hasImage = cardHasImage(card);
+
+  const [gifUrl, setGifUrl] = useState<string | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  // Fetch GIF on mount or when cardId changes
+  useEffect(() => {
+    if (!hasImage) return;
+
+    // Check cache first
+    const cached = getCachedGif(cardId);
+    if (cached) {
+      setGifUrl(cached);
+      return;
+    }
+
+    // Fetch new GIF
+    let cancelled = false;
+    setIsLoading(true);
+
+    getGifForCard(cardId)
+      .then((url) => {
+        if (!cancelled) {
+          setGifUrl(url);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [hasImage, cardId, getCachedGif, getGifForCard]);
+
   return (
     <motion.div
       className={cn(
-        "relative rounded-2xl p-4 cursor-pointer select-none",
+        "relative rounded-2xl cursor-pointer select-none overflow-hidden",
         // Size variations
         size === "md" ? "w-48 h-52" : "w-56 h-60",
         // Base styling - white card
@@ -275,17 +325,48 @@ function ReplyCard({
       {/* Card content */}
       <div className="flex flex-col h-full">
         {/* Reply indicator */}
-        <div className="flex items-center gap-1 mb-2">
+        <div className="flex items-center gap-1 p-3 pb-0">
           <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
           <span className="text-[10px] text-slate-400 uppercase tracking-wider font-medium">
             Reply
           </span>
         </div>
 
+        {/* GIF Image (if card has one) */}
+        {hasImage && (
+          <div className="relative mx-3 mt-2 h-20 bg-slate-100 rounded-lg overflow-hidden">
+            {isLoading ? (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
+              </div>
+            ) : gifUrl ? (
+              <>
+                {!imageLoaded && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Loader2 className="w-4 h-4 animate-spin text-slate-400" />
+                  </div>
+                )}
+                <Image
+                  src={gifUrl}
+                  alt="GIF"
+                  fill
+                  className={cn(
+                    "object-cover transition-opacity duration-200",
+                    imageLoaded ? "opacity-100" : "opacity-0"
+                  )}
+                  onLoad={() => setImageLoaded(true)}
+                  unoptimized
+                />
+              </>
+            ) : null}
+          </div>
+        )}
+
         {/* Card text */}
         <p
           className={cn(
-            "flex-1 text-slate-800 font-medium leading-snug",
+            "flex-1 text-slate-800 font-medium leading-snug p-3",
+            hasImage && "pt-2",
             size === "md" ? "text-sm" : "text-base"
           )}
         >

@@ -2,7 +2,9 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  cardHasImage,
   getPromptCard,
+  getReplyCard,
   getReplyDisplayText,
 } from "@/features/game/assets/cards";
 import type { GameSnapshotSchema } from "@/features/game/types/schema";
@@ -10,8 +12,8 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Check, Clock, StopCircle } from "lucide-react";
 import { CardCarousel } from "../mobile/CardCarousel";
+import { ImageMessage } from "../mobile/ImageMessage";
 import { JudgeIndicator } from "../mobile/JudgeBanner";
-import { MessageBubble } from "../mobile/MessageBubble";
 import { PhoneFrame } from "../mobile/PhoneFrame";
 
 interface AnsweringPhaseProps {
@@ -86,9 +88,11 @@ export function AnsweringPhase({
         variant="compact"
       >
         {promptCard && (
-          <MessageBubble
+          <ImageMessage
             type="prompt"
             text={promptCard.value}
+            cardId={promptCard.id}
+            hasImage={cardHasImage(promptCard)}
             isRead
             delay={0.2}
           />
@@ -106,15 +110,22 @@ export function AnsweringPhase({
           </motion.div>
         )}
 
-        {hasSubmitted && currentPlayer?.submittedCard && (
-          <MessageBubble
-            type="reply"
-            text={getReplyDisplayText(currentPlayer.submittedCard)}
-            isDelivered
-            isRead
-            delay={0.3}
-          />
-        )}
+        {hasSubmitted &&
+          currentPlayer?.submittedCard &&
+          (() => {
+            const replyCard = getReplyCard(currentPlayer.submittedCard);
+            return (
+              <ImageMessage
+                type="reply"
+                text={getReplyDisplayText(currentPlayer.submittedCard)}
+                cardId={currentPlayer.submittedCard}
+                hasImage={cardHasImage(replyCard)}
+                isDelivered
+                isRead
+                delay={0.3}
+              />
+            );
+          })()}
       </PhoneFrame>
 
       {/* Submission count */}

@@ -10,6 +10,7 @@ import {
 } from "@/features/game/domain/handlers";
 import type { JudgeVotesPayload } from "@/features/game/types/events";
 import type { GameSnapshotSchema } from "@/features/game/types/schema";
+import { assignGifUrls, getAllDealtCardIds } from "@/features/game/utils";
 import { eq } from "drizzle-orm";
 
 export async function judgeVotes(payload: JudgeVotesPayload) {
@@ -21,7 +22,8 @@ export async function judgeVotes(payload: JudgeVotesPayload) {
     throw new Error("Game not found");
   }
 
-  const afterVote = handleJudgeVotes(game.state as GameSnapshotSchema, payload);
+  const currentState = game.state as GameSnapshotSchema;
+  const afterVote = handleJudgeVotes(currentState, payload);
 
   // If game is finished, just save and broadcast
   if (afterVote.phase === "FINISHED") {
@@ -49,13 +51,25 @@ export async function judgeVotes(payload: JudgeVotesPayload) {
     actorId: afterDeal.round.judgeId!,
   });
 
+  // Assign GIF URLs to any new cards dealt (replenishment cards)
+  const allDealtCardIds = getAllDealtCardIds(afterStart.players);
+  const updatedGifUrls = await assignGifUrls(
+    allDealtCardIds,
+    afterStart.gifUrls ?? {}
+  );
+
+  const finalSnapshot: GameSnapshotSchema = {
+    ...afterStart,
+    gifUrls: updatedGifUrls,
+  };
+
   // Save final state and broadcast
   await db
     .update(games)
-    .set({ state: afterStart })
+    .set({ state: finalSnapshot })
     .where(eq(games.id, payload.gameId));
 
-  await broadcastGameState(payload.gameId, afterStart);
+  await broadcastGameState(payload.gameId, finalSnapshot);
 
   return { success: true };
 }

@@ -1,16 +1,23 @@
 "use client";
 
-import { getReplyDisplayText } from "@/features/game/assets/cards";
+import {
+  cardHasImage,
+  getPromptCard,
+  getReplyCard,
+  getReplyDisplayText,
+} from "@/features/game/assets/cards";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
-import { MessageBubble, TypingIndicator } from "./mobile/MessageBubble";
+import { ImageMessage } from "./mobile/ImageMessage";
+import { TypingIndicator } from "./mobile/MessageBubble";
 import { PhoneFrame } from "./mobile/PhoneFrame";
 
 interface WinnerRevealProps {
   winnerName: string;
   winningCardId: string;
+  promptCardId?: string;
   promptText?: string;
   onComplete?: () => void;
   autoHideAfter?: number; // milliseconds
@@ -66,6 +73,7 @@ type RevealStage = "entering" | "prompt" | "typing" | "reply" | "celebration";
 export function WinnerReveal({
   winnerName,
   winningCardId,
+  promptCardId,
   promptText = "...",
   onComplete,
   autoHideAfter = 6000,
@@ -106,6 +114,8 @@ export function WinnerReveal({
   };
 
   const replyText = getReplyDisplayText(winningCardId);
+  const replyCard = getReplyCard(winningCardId);
+  const promptCard = promptCardId ? getPromptCard(promptCardId) : null;
 
   return (
     <AnimatePresence>
@@ -178,9 +188,11 @@ export function WinnerReveal({
                   stage === "typing" ||
                   stage === "reply" ||
                   stage === "celebration") && (
-                  <MessageBubble
+                  <ImageMessage
                     type="prompt"
                     text={promptText}
+                    cardId={promptCardId || "unknown"}
+                    hasImage={cardHasImage(promptCard)}
                     isRead
                     delay={0}
                   />
@@ -195,9 +207,11 @@ export function WinnerReveal({
               {/* Reply message */}
               <AnimatePresence>
                 {(stage === "reply" || stage === "celebration") && (
-                  <MessageBubble
+                  <ImageMessage
                     type="reply"
                     text={replyText}
+                    cardId={winningCardId}
+                    hasImage={cardHasImage(replyCard)}
                     isDelivered
                     isRead
                     isWinner={stage === "celebration"}
