@@ -5,6 +5,7 @@ import {
   judgePicked,
   judgeVotes,
   playerAnswers,
+  restartGame,
   roundEnds,
   roundStarts,
 } from "@/app/actions/game";
@@ -31,6 +32,7 @@ interface UseGameActionsReturn {
   submitCard: (cardId: string) => Promise<void>;
   endRound: () => Promise<void>;
   vote: (winningPlayerId?: string | null) => Promise<void>;
+  restart: () => Promise<void>;
 }
 
 /**
@@ -116,6 +118,10 @@ export function useGameActions({
     [gameId, playerId, handleAction]
   );
 
+  const restart = useCallback(async () => {
+    await handleAction(() => restartGame({ gameId, actorId: playerId! }));
+  }, [gameId, playerId, handleAction]);
+
   return {
     isPending,
     error,
@@ -126,5 +132,6 @@ export function useGameActions({
     submitCard,
     endRound,
     vote,
+    restart,
   };
 }

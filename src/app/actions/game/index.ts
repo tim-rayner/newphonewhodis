@@ -5,10 +5,9 @@ export { judgeDeals } from "./judgeDeals";
 export { judgePicked } from "./judgePicked";
 export { judgeVotes } from "./judgeVotes";
 export { playerAnswers } from "./playerAnswers";
+export { restartGame } from "./restartGame";
 export { roundEnds } from "./roundEnds";
 export { roundStarts } from "./roundStarts";
 
 // Legacy export for backwards compatibility
 export { playCard } from "./playCard";
-
-

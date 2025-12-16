@@ -53,6 +53,7 @@ export default function GamePageClient({
     cardId: string;
     promptCardId: string;
     promptText: string;
+    judgeName: string;
   } | null>(null);
 
   const { state } = game;
@@ -78,6 +79,12 @@ export default function GamePageClient({
           ? prev.state.round.submissions[winnerId]
           : null;
 
+        // Capture the judge name from the previous state (before round reset)
+        const prevJudgeId = prev.state.round.judgeId;
+        const prevJudgeName = prevJudgeId
+          ? prev.state.players[prevJudgeId]?.name || "Judge"
+          : "Judge";
+
         if (winnerId && newState.players[winnerId] && winningCardId) {
           const winnerPlayer = newState.players[winnerId];
           const promptCard = prevPrompt ? getPromptCard(prevPrompt) : null;
@@ -89,6 +96,7 @@ export default function GamePageClient({
               cardId: winningCardId,
               promptCardId: prevPrompt || "",
               promptText: promptCard?.value || "...",
+              judgeName: prevJudgeName,
             });
           }, 0);
         }
@@ -213,6 +221,7 @@ export default function GamePageClient({
             winningCardId={winnerRevealData.cardId}
             promptCardId={winnerRevealData.promptCardId}
             promptText={winnerRevealData.promptText}
+            judgeName={winnerRevealData.judgeName}
             onComplete={() => setWinnerRevealData(null)}
           />
         )}
@@ -316,7 +325,12 @@ export default function GamePageClient({
 
             {state.phase === "FINISHED" && (
               <motion.div key="finished">
-                <FinishedPhase state={state} />
+                <FinishedPhase
+                  state={state}
+                  isHost={isHost}
+                  isPending={actions.isPending}
+                  onPlayAgain={actions.restart}
+                />
               </motion.div>
             )}
           </AnimatePresence>

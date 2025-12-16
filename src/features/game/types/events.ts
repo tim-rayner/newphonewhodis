@@ -67,6 +67,16 @@ export type JudgeVotesPayload = BaseEvent & {
 };
 
 /**
+ * RESTART_GAME - Host restarts the game after it finishes
+ * - Resets all player scores to 0
+ * - Clears all hands
+ * - Gets fresh shuffled decks
+ * - Resets round state
+ * - Returns to LOBBY phase
+ */
+export type RestartGamePayload = BaseEvent;
+
+/**
  * Union type of all game event payloads
  */
 export type GameEventPayload =
@@ -75,4 +85,5 @@ export type GameEventPayload =
   | RoundStartsPayload
   | PlayerAnswersPayload
   | RoundEndsPayload
-  | JudgeVotesPayload;
+  | JudgeVotesPayload
+  | RestartGamePayload;

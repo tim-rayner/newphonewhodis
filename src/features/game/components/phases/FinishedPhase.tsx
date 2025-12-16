@@ -9,6 +9,9 @@ import Link from "next/link";
 
 interface FinishedPhaseProps {
   state: GameSnapshotSchema;
+  isHost: boolean;
+  isPending: boolean;
+  onPlayAgain: () => void;
 }
 
 interface ConfettiParticle {
@@ -48,7 +51,12 @@ const CONFETTI_PARTICLES: ConfettiParticle[] = Array.from({ length: 30 }).map(
  * Game finished phase - show final scores and winner
  * Mobile-first design with celebration effects
  */
-export function FinishedPhase({ state }: FinishedPhaseProps) {
+export function FinishedPhase({
+  state,
+  isHost,
+  isPending,
+  onPlayAgain,
+}: FinishedPhaseProps) {
   // Sort players by score
   const sortedPlayers = Object.entries(state.players)
     .map(([id, player]) => ({ id, ...player }))
@@ -76,8 +84,8 @@ export function FinishedPhase({ state }: FinishedPhaseProps) {
             <motion.div
               key={particle.id}
               className={cn("absolute w-3 h-3 rounded-sm", particle.color)}
+              style={{ left: particle.initialX }}
               initial={{
-                x: particle.initialX,
                 y: -20,
                 rotate: 0,
               }}
@@ -194,10 +202,11 @@ export function FinishedPhase({ state }: FinishedPhaseProps) {
         <Button
           size="lg"
           className="flex-1 sm:flex-initial gap-2 min-h-[52px]"
-          disabled
+          disabled={!isHost || isPending}
+          onClick={onPlayAgain}
         >
-          <RotateCcw className="w-5 h-5" />
-          Play Again (Coming Soon)
+          <RotateCcw className={cn("w-5 h-5", isPending && "animate-spin")} />
+          {isHost ? "Play Again" : "Waiting for Host..."}
         </Button>
       </motion.div>
     </motion.div>

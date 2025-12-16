@@ -7,6 +7,7 @@ import type {
   JudgePickedPayload,
   JudgeVotesPayload,
   PlayerAnswersPayload,
+  RestartGamePayload,
   RoundEndsPayload,
   RoundStartsPayload,
 } from "@/features/game/types/events";
@@ -61,9 +62,10 @@ function getNextJudgeId(snapshot: GameSnapshotSchema): string {
     throw new InvalidActionError("No players in game");
   }
 
-  // If no current judge, return first player
+  // If no current judge, pick randomly
   if (!round.judgeId) {
-    return playerOrder[0];
+    const randomIndex = Math.floor(Math.random() * playerOrder.length);
+    return playerOrder[randomIndex];
   }
 
   // Find current judge index and rotate
@@ -454,5 +456,68 @@ export function handleJudgeVotes(
       roundStartAt: null,
     },
     phase: gameOver ? "FINISHED" : "LOBBY",
+  };
+}
+
+/**
+ * handleRestartGame - Host restarts the game after it finishes
+ *
+ * Validates:
+ * - Phase is FINISHED
+ * - Actor is the host
+ *
+ * Transitions: FINISHED -> LOBBY
+ *
+ * Resets:
+ * - All player scores to 0
+ * - All player hands to empty
+ * - All submittedCard to null
+ * - Round state to initial values
+ * - Decks to empty (server action will populate with fresh shuffled decks)
+ * - gifUrls to empty
+ */
+export function handleRestartGame(
+  snapshot: GameSnapshotSchema,
+  payload: RestartGamePayload
+): GameSnapshotSchema {
+  // Validate phase
+  if (snapshot.phase !== "FINISHED") {
+    throw new InvalidPhaseError("FINISHED", snapshot.phase);
+  }
+
+  // Validate actor is host
+  const hostId = getHostId(snapshot);
+  if (payload.actorId !== hostId) {
+    throw new UnauthorizedError("Only the host can restart the game");
+  }
+
+  // Reset all players - keep their identity but clear game state
+  const resetPlayers: typeof snapshot.players = {};
+  for (const [playerId, player] of Object.entries(snapshot.players)) {
+    resetPlayers[playerId] = {
+      ...player,
+      score: 0,
+      hand: [],
+      submittedCard: null,
+    };
+  }
+
+  return {
+    ...snapshot,
+    players: resetPlayers,
+    round: {
+      roundNumber: 0,
+      promptCard: null,
+      submissions: {},
+      judgeId: null,
+      winningPlayerId: null,
+      roundStartAt: null,
+    },
+    decks: {
+      prompts: [],
+      responses: [],
+    },
+    gifUrls: {},
+    phase: "LOBBY",
   };
 }

@@ -19,6 +19,7 @@ interface WinnerRevealProps {
   winningCardId: string;
   promptCardId?: string;
   promptText?: string;
+  judgeName?: string;
   onComplete?: () => void;
   autoHideAfter?: number; // milliseconds
 }
@@ -75,6 +76,7 @@ export function WinnerReveal({
   winningCardId,
   promptCardId,
   promptText = "...",
+  judgeName,
   onComplete,
   autoHideAfter = 6000,
 }: WinnerRevealProps) {
@@ -178,7 +180,7 @@ export function WinnerReveal({
           >
             {/* Phone Frame with message reveal */}
             <PhoneFrame
-              hostName={winnerName}
+              hostName={judgeName || "Judge"}
               variant="compact"
               showHeader={true}
             >
