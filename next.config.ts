@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "i.giphy.com",
+      },
+      {
+        protocol: "https",
         hostname: "media0.giphy.com",
       },
       {

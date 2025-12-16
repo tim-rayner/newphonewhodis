@@ -1,7 +1,7 @@
 "use client";
 
 import { fetchRandomGif, PLACEHOLDER_GIF_URL } from "@/features/game/utils";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 interface GifCacheState {
   [cardId: string]: {
@@ -25,11 +25,9 @@ export function useGifCache(serverGifUrls: Record<string, string> = {}) {
   const pendingFetches = useRef<Set<string>>(new Set());
   // Store server URLs in a ref to avoid closure issues
   const serverUrlsRef = useRef<Record<string, string>>(serverGifUrls);
-
-  // Update ref when serverGifUrls changes (in effect, not during render)
-  useEffect(() => {
-    serverUrlsRef.current = serverGifUrls;
-  }, [serverGifUrls]);
+  // Update ref synchronously during render to ensure child effects see latest values
+  // (Effects run after render, so updating in useEffect would cause stale reads)
+  serverUrlsRef.current = serverGifUrls;
 
   // State trigger for re-renders when cache updates
   const [, forceUpdate] = useState({});
@@ -42,34 +40,20 @@ export function useGifCache(serverGifUrls: Record<string, string> = {}) {
       // Priority 1: Server-assigned URL (source of truth)
       const serverUrl = serverUrlsRef.current[cardId];
       if (serverUrl) {
-        console.log(
-          `[GifCache] Server URL hit for ${cardId}:`,
-          serverUrl.slice(0, 50)
-        );
         return serverUrl;
       }
 
       // Priority 2: Local cache
       if (cacheRef.current[cardId]?.url) {
-        console.log(
-          `[GifCache] Local cache hit for ${cardId}:`,
-          cacheRef.current[cardId].url.slice(0, 50)
-        );
         return cacheRef.current[cardId].url;
       }
 
       // Prevent duplicate fetches for the same card
       if (pendingFetches.current.has(cardId)) {
-        console.log(
-          `[GifCache] Pending fetch for ${cardId}, returning placeholder`
-        );
         return PLACEHOLDER_GIF_URL;
       }
 
       // Fallback: Fetch from Giphy (should be rare - only for edge cases)
-      console.log(`[GifCache] Fetching new GIF for ${cardId} (fallback)`);
-
-      // Mark as loading
       pendingFetches.current.add(cardId);
       cacheRef.current[cardId] = { url: "", loading: true };
       forceUpdate({});
@@ -77,11 +61,6 @@ export function useGifCache(serverGifUrls: Record<string, string> = {}) {
       try {
         const gifUrl = await fetchRandomGif();
         const finalUrl = gifUrl || PLACEHOLDER_GIF_URL;
-
-        console.log(
-          `[GifCache] Fetched GIF for ${cardId}:`,
-          finalUrl.slice(0, 50)
-        );
 
         cacheRef.current[cardId] = { url: finalUrl, loading: false };
         pendingFetches.current.delete(cardId);
@@ -113,29 +92,22 @@ export function useGifCache(serverGifUrls: Record<string, string> = {}) {
    * Checks server URLs first, then local cache
    */
   const getCachedGif = useCallback((cardId: string): string | undefined => {
-    // Debug: Log what we're checking
-    console.log(`[getCachedGif] Checking ${cardId}`);
-    console.log(
-      `[getCachedGif] serverUrlsRef.current keys:`,
-      Object.keys(serverUrlsRef.current)
-    );
-    console.log(
-      `[getCachedGif] serverUrlsRef.current[${cardId}]:`,
-      serverUrlsRef.current[cardId]?.slice(0, 50)
-    );
-
     // Priority 1: Server-assigned URL
     const serverUrl = serverUrlsRef.current[cardId];
     if (serverUrl) {
-      console.log(`[getCachedGif] HIT from server for ${cardId}`);
       return serverUrl;
     }
     // Priority 2: Local cache
     const localUrl = cacheRef.current[cardId]?.url || undefined;
-    console.log(
-      `[getCachedGif] Local cache for ${cardId}:`,
-      localUrl ? "HIT" : "MISS"
-    );
+
+    // Debug: Log cache miss for GIF cards
+    if (!localUrl) {
+      console.debug(
+        `[GifCache] Cache miss for ${cardId}. Server URLs:`,
+        Object.keys(serverUrlsRef.current).length
+      );
+    }
+
     return localUrl;
   }, []); // Stable function - uses refs internally
 

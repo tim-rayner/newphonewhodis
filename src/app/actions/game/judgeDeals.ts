@@ -10,8 +10,6 @@ import { assignGifUrls, getAllDealtCardIds } from "@/features/game/utils";
 import { eq } from "drizzle-orm";
 
 export async function judgeDeals(payload: JudgeDealsPayload) {
-  console.log("[judgeDeals] Starting...");
-
   const game = await db.query.games.findFirst({
     where: eq(games.id, payload.gameId),
   });
@@ -25,18 +23,19 @@ export async function judgeDeals(payload: JudgeDealsPayload) {
     payload
   );
 
-  // Assign GIF URLs to newly dealt cards
+  // Assign GIF URLs to newly dealt cards (including prompt card)
   const allDealtCardIds = getAllDealtCardIds(afterDeals.players);
-  console.log("[judgeDeals] All dealt card IDs:", allDealtCardIds);
-  console.log("[judgeDeals] Existing gifUrls:", afterDeals.gifUrls);
+
+  // Include prompt card in the list of cards to check
+  const cardsToCheck = [...allDealtCardIds];
+  if (afterDeals.round.promptCard) {
+    cardsToCheck.push(afterDeals.round.promptCard);
+  }
 
   const updatedGifUrls = await assignGifUrls(
-    allDealtCardIds,
+    cardsToCheck,
     afterDeals.gifUrls ?? {}
   );
-
-  console.log("[judgeDeals] Updated gifUrls:", updatedGifUrls);
-  console.log("[judgeDeals] gifUrls keys:", Object.keys(updatedGifUrls));
 
   const newSnapshot: GameSnapshotSchema = {
     ...afterDeals,
@@ -49,11 +48,6 @@ export async function judgeDeals(payload: JudgeDealsPayload) {
     .where(eq(games.id, payload.gameId));
 
   await broadcastGameState(payload.gameId, newSnapshot);
-
-  console.log(
-    "[judgeDeals] Complete. gifUrls saved:",
-    Object.keys(newSnapshot.gifUrls).length
-  );
 
   return { success: true };
 }

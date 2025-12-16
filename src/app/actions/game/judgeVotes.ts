@@ -51,10 +51,17 @@ export async function judgeVotes(payload: JudgeVotesPayload) {
     actorId: afterDeal.round.judgeId!,
   });
 
-  // Assign GIF URLs to any new cards dealt (replenishment cards)
+  // Assign GIF URLs to any new cards dealt (replenishment cards + new prompt)
   const allDealtCardIds = getAllDealtCardIds(afterStart.players);
+
+  // Include prompt card in the list of cards to check
+  const cardsToCheck = [...allDealtCardIds];
+  if (afterStart.round.promptCard) {
+    cardsToCheck.push(afterStart.round.promptCard);
+  }
+
   const updatedGifUrls = await assignGifUrls(
-    allDealtCardIds,
+    cardsToCheck,
     afterStart.gifUrls ?? {}
   );
 

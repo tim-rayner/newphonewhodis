@@ -203,9 +203,6 @@ export default function GamePageClient({
   const showJudgeBanner =
     state.phase !== "LOBBY" && state.phase !== "FINISHED" && judgeName;
 
-  // Debug: Log gifUrls from state
-  console.log("[GamePageClient] state.gifUrls:", state.gifUrls);
-
   return (
     <GifCacheProvider serverGifUrls={state.gifUrls}>
       <div className="relative min-h-screen bg-gradient-to-b from-background to-secondary/20">

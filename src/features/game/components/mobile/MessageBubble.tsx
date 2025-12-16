@@ -45,6 +45,7 @@ export function MessageBubble({
 }: MessageBubbleProps) {
   const isPrompt = type === "prompt";
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const hasGif = gifUrl || isGifLoading;
 
   // Format current time if no timestamp provided
@@ -75,9 +76,8 @@ export function MessageBubble({
       <motion.div
         className={cn(
           "relative rounded-2xl overflow-hidden",
-          // Add padding only when there's no GIF or text exists
+          // Add padding only when there's no GIF
           !hasGif && "px-4 py-2.5",
-          hasGif && "pb-0",
           // Prompt (incoming) styles
           isPrompt && "bg-[#3a3a3c] text-white rounded-bl-md",
           // Reply (outgoing) styles - iMessage green
@@ -94,28 +94,39 @@ export function MessageBubble({
       >
         {/* GIF Image */}
         {hasGif && (
-          <div className="relative w-full min-h-[120px] max-h-[200px] bg-black/20">
+          <div className="relative w-full min-w-[200px] aspect-video bg-black/20">
             {isGifLoading ? (
               <div className="absolute inset-0 flex items-center justify-center">
                 <Loader2 className="w-8 h-8 animate-spin text-white/50" />
               </div>
             ) : gifUrl ? (
               <>
-                {!imageLoaded && (
+                {!imageLoaded && !imageError && (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <Loader2 className="w-6 h-6 animate-spin text-white/50" />
+                  </div>
+                )}
+                {imageError && (
+                  <div className="absolute inset-0 flex items-center justify-center text-white/50 text-xs">
+                    GIF failed
                   </div>
                 )}
                 <Image
                   src={gifUrl}
                   alt="GIF"
-                  width={200}
-                  height={150}
+                  fill
                   className={cn(
-                    "w-full h-auto object-cover transition-opacity duration-200",
-                    imageLoaded ? "opacity-100" : "opacity-0"
+                    "object-cover transition-opacity duration-200",
+                    imageLoaded && !imageError ? "opacity-100" : "opacity-0"
                   )}
                   onLoad={() => setImageLoaded(true)}
+                  onError={() => {
+                    console.error(
+                      "[MessageBubble] Image failed to load:",
+                      gifUrl
+                    );
+                    setImageError(true);
+                  }}
                   unoptimized // GIFs need to be unoptimized to animate
                 />
               </>
@@ -128,7 +139,7 @@ export function MessageBubble({
           <p
             className={cn(
               "text-[15px] leading-snug whitespace-pre-wrap break-words",
-              hasGif ? "px-4 py-2.5" : ""
+              hasGif ? "px-4 pt-2 pb-2.5" : ""
             )}
           >
             {text}

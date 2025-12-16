@@ -267,6 +267,7 @@ function ReplyCard({
   const [gifUrl, setGifUrl] = useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   // Fetch GIF on mount or when cardId changes
   useEffect(() => {
@@ -285,9 +286,12 @@ function ReplyCard({
 
     getGifForCard(cardId)
       .then((url) => {
-        if (!cancelled) {
+        if (!cancelled && url) {
           setGifUrl(url);
         }
+      })
+      .catch((error) => {
+        console.error(`[ReplyCard] Error fetching GIF for ${cardId}:`, error);
       })
       .finally(() => {
         if (!cancelled) {
@@ -303,7 +307,7 @@ function ReplyCard({
   return (
     <motion.div
       className={cn(
-        "relative rounded-2xl cursor-pointer select-none overflow-hidden",
+        "relative rounded-2xl cursor-pointer select-none",
         // Size variations
         size === "md" ? "w-48 h-52" : "w-56 h-60",
         // Base styling - white card
@@ -323,7 +327,7 @@ function ReplyCard({
       whileTap={!disabled && isActive ? { scale: 0.98 } : undefined}
     >
       {/* Card content */}
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full overflow-hidden rounded-2xl">
         {/* Reply indicator */}
         <div className="flex items-center gap-1 p-3 pb-0">
           <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
@@ -341,9 +345,14 @@ function ReplyCard({
               </div>
             ) : gifUrl ? (
               <>
-                {!imageLoaded && (
+                {!imageLoaded && !imageError && (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <Loader2 className="w-4 h-4 animate-spin text-slate-400" />
+                  </div>
+                )}
+                {imageError && (
+                  <div className="absolute inset-0 flex items-center justify-center text-slate-400 text-[10px]">
+                    GIF error
                   </div>
                 )}
                 <Image
@@ -352,9 +361,13 @@ function ReplyCard({
                   fill
                   className={cn(
                     "object-cover transition-opacity duration-200",
-                    imageLoaded ? "opacity-100" : "opacity-0"
+                    imageLoaded && !imageError ? "opacity-100" : "opacity-0"
                   )}
                   onLoad={() => setImageLoaded(true)}
+                  onError={() => {
+                    console.error("[ReplyCard] Image failed to load:", gifUrl);
+                    setImageError(true);
+                  }}
                   unoptimized
                 />
               </>

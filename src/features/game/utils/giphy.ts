@@ -46,8 +46,6 @@ export async function fetchRandomGif(): Promise<string | null> {
       random_id: randomId,
     });
 
-    console.log(`[Giphy] Fetching random GIF with id: ${randomId}`);
-
     const response = await fetch(`${GIPHY_API_URL}?${params}`, {
       // Disable Next.js fetch caching - each call should get a unique random GIF
       cache: "no-store",
@@ -58,12 +56,8 @@ export async function fetchRandomGif(): Promise<string | null> {
     }
 
     const data: GiphyResponse = await response.json();
-    const gifUrl = data.data.images.fixed_width.url;
-
-    console.log(`[Giphy] Got GIF: ${gifUrl.slice(0, 60)}...`);
-
     // Use fixed_width for consistent sizing in chat bubbles
-    return gifUrl;
+    return data.data.images.fixed_width.url;
   } catch (error) {
     console.error("[Giphy] Failed to fetch random GIF:", error);
     return null;

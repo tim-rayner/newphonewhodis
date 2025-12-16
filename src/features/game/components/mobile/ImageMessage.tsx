@@ -45,22 +45,28 @@ export function ImageMessage({
   useEffect(() => {
     if (!hasImage) return;
 
-    // Check cache first
+    // Check cache first (synchronous)
     const cached = getCachedGif(cardId);
     if (cached) {
       setGifUrl(cached);
       return;
     }
 
-    // Fetch new GIF
+    // Fetch new GIF (async)
     let cancelled = false;
     setIsLoading(true);
 
     getGifForCard(cardId)
       .then((url) => {
-        if (!cancelled) {
+        if (!cancelled && url) {
           setGifUrl(url);
         }
+      })
+      .catch((error) => {
+        console.error(
+          `[ImageMessage] Error fetching GIF for ${cardId}:`,
+          error
+        );
       })
       .finally(() => {
         if (!cancelled) {

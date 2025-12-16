@@ -21,13 +21,6 @@ export function GifCacheProvider({
   children,
   serverGifUrls = {},
 }: GifCacheProviderProps) {
-  // Debug: Log server GIF URLs
-  console.log("[GifCacheProvider] serverGifUrls:", serverGifUrls);
-  console.log(
-    "[GifCacheProvider] serverGifUrls keys:",
-    Object.keys(serverGifUrls)
-  );
-
   const gifCache = useGifCache(serverGifUrls);
 
   return (
