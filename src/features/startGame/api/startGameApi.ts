@@ -77,6 +77,7 @@ export async function startGame(
       },
       phase: "LOBBY",
       gifUrls: {},
+      wildcardTexts: {},
     };
 
     // 4. Create game in DB

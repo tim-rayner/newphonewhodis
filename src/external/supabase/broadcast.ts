@@ -27,3 +27,20 @@ export async function broadcastGameState(
   // Clean up the channel after sending
   await supabaseAdmin.removeChannel(channel);
 }
+
+/**
+ * Broadcast game ended event to all players
+ * This signals that the host has ended the game and all players should redirect home
+ */
+export async function broadcastGameEnded(gameId: string): Promise<void> {
+  const channel = supabaseAdmin.channel(`game-${gameId}`);
+
+  await channel.send({
+    type: "broadcast",
+    event: "game_ended",
+    payload: {},
+  });
+
+  // Clean up the channel after sending
+  await supabaseAdmin.removeChannel(channel);
+}

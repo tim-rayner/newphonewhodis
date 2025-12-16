@@ -15,6 +15,7 @@ export {
   getReplyCard,
   getReplyDisplayText,
   getShuffledReplyDeck,
+  isWildcard,
   REPLY_CARDS_BY_ID,
 } from "./replies";
 

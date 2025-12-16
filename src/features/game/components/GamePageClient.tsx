@@ -5,6 +5,7 @@ import type { GameSnapshotSchema } from "@/features/game/types/schema";
 import { usePlayerIdentity } from "@/features/player/hooks/usePlayerIdentity";
 import { GameWithState } from "@/shared/types/gameTypes";
 import { AnimatePresence, motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import {
   useCallback,
   useEffect,
@@ -17,6 +18,7 @@ import { GifCacheProvider } from "../context";
 import { useGameActions, useGameChannel } from "../hooks";
 import { ConnectionStatus } from "./ConnectionStatus";
 import { CountdownTimer } from "./CountdownTimer";
+import { GameMenu } from "./GameMenu";
 import { GameCodeBadge } from "./mobile/GameCodeBadge";
 import { JudgeBanner } from "./mobile/JudgeBanner";
 import {
@@ -43,6 +45,7 @@ export default function GamePageClient({
 }: {
   initialGame: GameWithState;
 }) {
+  const router = useRouter();
   const [game, setGame] = useState(initialGame);
   const playerId = usePlayerIdentity();
   const previousPhaseRef = useRef<string | null>(null);
@@ -54,6 +57,7 @@ export default function GamePageClient({
     promptCardId: string;
     promptText: string;
     judgeName: string;
+    wildcardTexts: Record<string, string>;
   } | null>(null);
 
   const { state } = game;
@@ -64,6 +68,11 @@ export default function GamePageClient({
   const judgeName = state.round.judgeId
     ? state.players[state.round.judgeId]?.name || null
     : null;
+
+  // Handle game ended event from broadcast - redirect to home
+  const handleGameEnded = useCallback(() => {
+    router.push("/");
+  }, [router]);
 
   // Handle state updates from broadcast - also detect winner transitions
   const handleStateUpdate = useCallback((newState: GameSnapshotSchema) => {
@@ -88,6 +97,8 @@ export default function GamePageClient({
         if (winnerId && newState.players[winnerId] && winningCardId) {
           const winnerPlayer = newState.players[winnerId];
           const promptCard = prevPrompt ? getPromptCard(prevPrompt) : null;
+          // Capture wildcardTexts from current state (before it changes)
+          const capturedWildcardTexts = prev.state.wildcardTexts || {};
 
           // Schedule winner reveal after state update
           setTimeout(() => {
@@ -97,6 +108,7 @@ export default function GamePageClient({
               promptCardId: prevPrompt || "",
               promptText: promptCard?.value || "...",
               judgeName: prevJudgeName,
+              wildcardTexts: capturedWildcardTexts,
             });
           }, 0);
         }
@@ -115,6 +127,7 @@ export default function GamePageClient({
   const { connectionStatus, reconnect } = useGameChannel({
     gameId: initialGame.id,
     onStateUpdate: handleStateUpdate,
+    onGameEnded: handleGameEnded,
   });
 
   // Game actions with loading states
@@ -125,6 +138,20 @@ export default function GamePageClient({
       console.error("Game action error:", error);
     },
   });
+
+  // Menu action handlers that redirect after success
+  const handleEndGame = useCallback(async () => {
+    await actions.endGame();
+    // The broadcast will handle redirect for all players
+    // But we also redirect the host immediately
+    router.push("/");
+  }, [actions, router]);
+
+  const handleLeaveGame = useCallback(async () => {
+    await actions.leaveGame();
+    // Redirect the leaving player home
+    router.push("/");
+  }, [actions, router]);
 
   // Convert players record to array for PlayerList
   const players = Object.entries(state.players).map(([id, player]) => ({
@@ -222,6 +249,7 @@ export default function GamePageClient({
             promptCardId={winnerRevealData.promptCardId}
             promptText={winnerRevealData.promptText}
             judgeName={winnerRevealData.judgeName}
+            wildcardTexts={winnerRevealData.wildcardTexts}
             onComplete={() => setWinnerRevealData(null)}
           />
         )}
@@ -246,7 +274,7 @@ export default function GamePageClient({
                 )}
               </div>
 
-              {/* Right: Timer, Connection, Players */}
+              {/* Right: Timer, Connection, Players, Menu */}
               <div className="flex items-center gap-2">
                 {state.phase === "ANSWERING" && (
                   <CountdownTimer
@@ -260,6 +288,12 @@ export default function GamePageClient({
                   onReconnect={reconnect}
                 />
                 <PlayerList players={players} />
+                <GameMenu
+                  isHost={isHost}
+                  isPending={actions.isPending}
+                  onEndGame={handleEndGame}
+                  onLeaveGame={handleLeaveGame}
+                />
               </div>
             </div>
           </div>

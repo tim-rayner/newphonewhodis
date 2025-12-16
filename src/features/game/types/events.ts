@@ -45,6 +45,8 @@ export type RoundStartsPayload = BaseEvent;
 export type PlayerAnswersPayload = BaseEvent & {
   /** The card ID the player is submitting */
   cardId: string;
+  /** Optional: custom text for wildcard cards */
+  wildcardText?: string;
 };
 
 /**
@@ -77,6 +79,22 @@ export type JudgeVotesPayload = BaseEvent & {
 export type RestartGamePayload = BaseEvent;
 
 /**
+ * END_GAME - Host ends the game for all players
+ * - Only allowed during LOBBY, DEALT, or FINISHED phases
+ * - All players will be redirected to home
+ * - Game is marked as ended
+ */
+export type EndGamePayload = BaseEvent;
+
+/**
+ * LEAVE_GAME - A player leaves the game
+ * - Only allowed during LOBBY, DEALT, or FINISHED phases
+ * - If the host leaves, the game ends for everyone
+ * - Otherwise, the player is removed from the game state
+ */
+export type LeaveGamePayload = BaseEvent;
+
+/**
  * Union type of all game event payloads
  */
 export type GameEventPayload =
@@ -86,4 +104,6 @@ export type GameEventPayload =
   | PlayerAnswersPayload
   | RoundEndsPayload
   | JudgeVotesPayload
-  | RestartGamePayload;
+  | RestartGamePayload
+  | EndGamePayload
+  | LeaveGamePayload;

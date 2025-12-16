@@ -38,28 +38,33 @@ export function ImageMessage({
   delay,
 }: ImageMessageProps) {
   const { getGifForCard, getCachedGif } = useGifCacheContext();
-  const [gifUrl, setGifUrl] = useState<string | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(false);
+  // Initialize with cached value if available
+  const [gifUrl, setGifUrl] = useState<string | undefined>(() => {
+    if (!hasImage) return undefined;
+    return getCachedGif(cardId);
+  });
+  // Track fetch completion to derive loading state
+  const [fetchComplete, setFetchComplete] = useState(() => {
+    // If we have a cached URL on init, fetch is already complete
+    if (!hasImage) return true;
+    return !!getCachedGif(cardId);
+  });
+
+  // Derive loading state instead of setting it synchronously in effect
+  const isLoading = hasImage && !fetchComplete;
 
   // Fetch GIF on mount or when cardId changes
+  // getGifForCard handles caching internally and returns quickly if cached
   useEffect(() => {
     if (!hasImage) return;
 
-    // Check cache first (synchronous)
-    const cached = getCachedGif(cardId);
-    if (cached) {
-      setGifUrl(cached);
-      return;
-    }
-
-    // Fetch new GIF (async)
     let cancelled = false;
-    setIsLoading(true);
 
     getGifForCard(cardId)
       .then((url) => {
         if (!cancelled && url) {
           setGifUrl(url);
+          setFetchComplete(true);
         }
       })
       .catch((error) => {
@@ -67,17 +72,15 @@ export function ImageMessage({
           `[ImageMessage] Error fetching GIF for ${cardId}:`,
           error
         );
-      })
-      .finally(() => {
         if (!cancelled) {
-          setIsLoading(false);
+          setFetchComplete(true);
         }
       });
 
     return () => {
       cancelled = true;
     };
-  }, [hasImage, cardId, getCachedGif, getGifForCard]);
+  }, [hasImage, cardId, getGifForCard]);
 
   return (
     <MessageBubble

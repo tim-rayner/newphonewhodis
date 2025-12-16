@@ -1,6 +1,10 @@
 // Reply card loader - provides lookup map and deck shuffler
 import { type ReplyCard, shuffleArray } from "@/features/card";
+import { isWildcard } from "@/features/game/utils/wildcards";
 import REPLY_DATA from "./replies-data.json";
+
+// Re-export isWildcard for convenience
+export { isWildcard };
 
 // Cast imported JSON to typed array
 const replyCards: ReplyCard[] = REPLY_DATA as ReplyCard[];
@@ -25,10 +29,24 @@ export function getReplyCard(id: string): ReplyCard | undefined {
   return REPLY_CARDS_BY_ID.get(id);
 }
 
-// Get display text for a card - handles text cards, image cards, and missing cards
+/**
+ * Get display text for a card - handles text cards, image cards, wildcards, and missing cards
+ * @param cardOrId - Card object or card ID string
+ * @param wildcardTexts - Optional map of wildcard ID -> custom text (from game state)
+ */
 export function getReplyDisplayText(
-  cardOrId: ReplyCard | string | undefined
+  cardOrId: ReplyCard | string | undefined,
+  wildcardTexts?: Record<string, string>
 ): string {
+  const cardId = typeof cardOrId === "string" ? cardOrId : cardOrId?.id;
+
+  // Handle wildcard cards
+  if (cardId && isWildcard(cardId)) {
+    const customText = wildcardTexts?.[cardId];
+    // Return custom text if set, otherwise empty (UI will show input prompt)
+    return customText ?? "";
+  }
+
   const card = typeof cardOrId === "string" ? getReplyCard(cardOrId) : cardOrId;
   if (!card) return typeof cardOrId === "string" ? cardOrId : "???";
   if (card.value) return card.value;

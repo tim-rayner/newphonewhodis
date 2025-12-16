@@ -1,7 +1,7 @@
 "use client";
 
 import { fetchRandomGif, PLACEHOLDER_GIF_URL } from "@/features/game/utils";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface GifCacheState {
   [cardId: string]: {
@@ -25,9 +25,11 @@ export function useGifCache(serverGifUrls: Record<string, string> = {}) {
   const pendingFetches = useRef<Set<string>>(new Set());
   // Store server URLs in a ref to avoid closure issues
   const serverUrlsRef = useRef<Record<string, string>>(serverGifUrls);
-  // Update ref synchronously during render to ensure child effects see latest values
-  // (Effects run after render, so updating in useEffect would cause stale reads)
-  serverUrlsRef.current = serverGifUrls;
+
+  // Update ref in effect to keep in sync with prop
+  useEffect(() => {
+    serverUrlsRef.current = serverGifUrls;
+  }, [serverGifUrls]);
 
   // State trigger for re-renders when cache updates
   const [, forceUpdate] = useState({});

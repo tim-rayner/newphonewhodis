@@ -15,6 +15,7 @@ export type ConnectionStatus =
 interface UseGameChannelOptions {
   gameId: string;
   onStateUpdate: (state: GameSnapshotSchema) => void;
+  onGameEnded?: () => void;
 }
 
 interface UseGameChannelReturn {
@@ -29,16 +30,19 @@ interface UseGameChannelReturn {
 export function useGameChannel({
   gameId,
   onStateUpdate,
+  onGameEnded,
 }: UseGameChannelOptions): UseGameChannelReturn {
   const [connectionStatus, setConnectionStatus] =
     useState<ConnectionStatus>("connecting");
   const channelRef = useRef<RealtimeChannel | null>(null);
   const supabaseRef = useRef(createClient());
   const onStateUpdateRef = useRef(onStateUpdate);
+  const onGameEndedRef = useRef(onGameEnded);
 
-  // Keep the callback ref updated
+  // Keep the callback refs updated
   useEffect(() => {
     onStateUpdateRef.current = onStateUpdate;
+    onGameEndedRef.current = onGameEnded;
   });
 
   useEffect(() => {
@@ -63,6 +67,10 @@ export function useGameChannel({
         } else {
           console.error("Invalid game state received:", parsed.error);
         }
+      })
+      .on("broadcast", { event: "game_ended" }, () => {
+        // Game has been ended by host - trigger redirect
+        onGameEndedRef.current?.();
       })
       .subscribe((status) => {
         switch (status) {
@@ -112,6 +120,10 @@ export function useGameChannel({
         } else {
           console.error("Invalid game state received:", parsed.error);
         }
+      })
+      .on("broadcast", { event: "game_ended" }, () => {
+        // Game has been ended by host - trigger redirect
+        onGameEndedRef.current?.();
       })
       .subscribe((status) => {
         switch (status) {

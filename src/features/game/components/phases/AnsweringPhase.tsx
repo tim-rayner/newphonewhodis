@@ -6,6 +6,7 @@ import {
   getPromptCard,
   getReplyCard,
   getReplyDisplayText,
+  isWildcard,
 } from "@/features/game/assets/cards";
 import type { GameSnapshotSchema } from "@/features/game/types/schema";
 import { cn } from "@/lib/utils";
@@ -22,7 +23,7 @@ interface AnsweringPhaseProps {
   isJudge: boolean;
   isPending: boolean;
   timeRemaining: number | null;
-  onSubmitCard: (cardId: string) => void;
+  onSubmitCard: (cardId: string, wildcardText?: string) => void;
   onEndRound: () => void;
 }
 
@@ -113,13 +114,18 @@ export function AnsweringPhase({
         {hasSubmitted &&
           currentPlayer?.submittedCard &&
           (() => {
-            const replyCard = getReplyCard(currentPlayer.submittedCard);
+            const submittedId = currentPlayer.submittedCard;
+            const cardIsWildcard = isWildcard(submittedId);
+            const replyCard = cardIsWildcard ? null : getReplyCard(submittedId);
+            const displayText = cardIsWildcard
+              ? state.wildcardTexts?.[submittedId] || "Custom reply"
+              : getReplyDisplayText(submittedId, state.wildcardTexts);
             return (
               <ImageMessage
                 type="reply"
-                text={getReplyDisplayText(currentPlayer.submittedCard)}
-                cardId={currentPlayer.submittedCard}
-                hasImage={cardHasImage(replyCard)}
+                text={displayText}
+                cardId={submittedId}
+                hasImage={!cardIsWildcard && cardHasImage(replyCard)}
                 isDelivered
                 isRead
                 delay={0.3}
@@ -209,6 +215,7 @@ export function AnsweringPhase({
             submittedCardId={currentPlayer.submittedCard}
             onSubmit={onSubmitCard}
             isPending={isPending}
+            wildcardTexts={state.wildcardTexts}
           />
         </motion.div>
       )}

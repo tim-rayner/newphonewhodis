@@ -29,7 +29,10 @@ export async function getActiveHostedGames(
       "Error name:",
       error instanceof Error ? error.name : "Unknown"
     );
-    console.error("Error cause:", (error as any)?.cause);
+    console.error(
+      "Error cause:",
+      error instanceof Error ? error.cause : undefined
+    );
 
     const message = error instanceof Error ? error.message : "Unknown error";
     logger.log(message);

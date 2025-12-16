@@ -5,6 +5,7 @@ import {
   getPromptCard,
   getReplyCard,
   getReplyDisplayText,
+  isWildcard,
 } from "@/features/game/assets/cards";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
@@ -22,6 +23,8 @@ interface WinnerRevealProps {
   judgeName?: string;
   onComplete?: () => void;
   autoHideAfter?: number; // milliseconds
+  /** Map of wildcard cardId -> custom text (from game state) */
+  wildcardTexts?: Record<string, string>;
 }
 
 interface ConfettiParticle {
@@ -79,6 +82,7 @@ export function WinnerReveal({
   judgeName,
   onComplete,
   autoHideAfter = 6000,
+  wildcardTexts = {},
 }: WinnerRevealProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [stage, setStage] = useState<RevealStage>("entering");
@@ -115,8 +119,12 @@ export function WinnerReveal({
     onComplete?.();
   };
 
-  const replyText = getReplyDisplayText(winningCardId);
-  const replyCard = getReplyCard(winningCardId);
+  // Handle wildcard cards - get custom text from wildcardTexts map
+  const cardIsWildcard = isWildcard(winningCardId);
+  const replyText = cardIsWildcard
+    ? wildcardTexts[winningCardId] || "Custom reply"
+    : getReplyDisplayText(winningCardId, wildcardTexts);
+  const replyCard = cardIsWildcard ? null : getReplyCard(winningCardId);
   const promptCard = promptCardId ? getPromptCard(promptCardId) : null;
 
   return (
@@ -213,7 +221,7 @@ export function WinnerReveal({
                     type="reply"
                     text={replyText}
                     cardId={winningCardId}
-                    hasImage={cardHasImage(replyCard)}
+                    hasImage={!cardIsWildcard && cardHasImage(replyCard)}
                     isDelivered
                     isRead
                     isWinner={stage === "celebration"}

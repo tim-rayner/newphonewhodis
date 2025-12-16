@@ -6,12 +6,17 @@ import type {
   JudgeDealsPayload,
   JudgePickedPayload,
   JudgeVotesPayload,
+  LeaveGamePayload,
   PlayerAnswersPayload,
   RestartGamePayload,
   RoundEndsPayload,
   RoundStartsPayload,
 } from "@/features/game/types/events";
 import type { GameSnapshotSchema } from "@/features/game/types/schema";
+import {
+  isWildcard,
+  WILDCARD_MAX_LENGTH,
+} from "@/features/game/utils/wildcards";
 
 // ============================================================================
 // Error classes for validation failures
@@ -298,8 +303,31 @@ export function handlePlayerAnswers(
     );
   }
 
+  // Handle wildcard cards - require and validate custom text
+  const cardIsWildcard = isWildcard(payload.cardId);
+  if (cardIsWildcard) {
+    if (!payload.wildcardText || payload.wildcardText.trim().length === 0) {
+      throw new InvalidActionError(
+        "Wildcard cards require custom text to be submitted"
+      );
+    }
+    if (payload.wildcardText.length > WILDCARD_MAX_LENGTH) {
+      throw new InvalidActionError(
+        `Wildcard text must be ${WILDCARD_MAX_LENGTH} characters or less`
+      );
+    }
+  }
+
   // Remove card from hand and add to submissions
   const newHand = player.hand.filter((id) => id !== payload.cardId);
+
+  // Build updated wildcardTexts if this is a wildcard
+  const updatedWildcardTexts = cardIsWildcard
+    ? {
+        ...snapshot.wildcardTexts,
+        [payload.cardId]: payload.wildcardText!.trim(),
+      }
+    : snapshot.wildcardTexts;
 
   return {
     ...snapshot,
@@ -318,6 +346,7 @@ export function handlePlayerAnswers(
         [payload.actorId]: payload.cardId,
       },
     },
+    wildcardTexts: updatedWildcardTexts,
   };
 }
 
@@ -518,6 +547,65 @@ export function handleRestartGame(
       responses: [],
     },
     gifUrls: {},
+    wildcardTexts: {},
     phase: "LOBBY",
+  };
+}
+
+/**
+ * handleLeaveGame - A player leaves the game
+ *
+ * Validates:
+ * - Actor is in the game
+ *
+ * Returns:
+ * - { shouldEndGame: true } if the host is leaving (ends game for everyone)
+ * - { shouldEndGame: false, newSnapshot } if a regular player leaves
+ */
+export function handleLeaveGame(
+  snapshot: GameSnapshotSchema,
+  payload: LeaveGamePayload
+):
+  | { shouldEndGame: true }
+  | { shouldEndGame: false; newSnapshot: GameSnapshotSchema } {
+  // Validate actor exists in game
+  const player = snapshot.players[payload.actorId];
+  if (!player) {
+    throw new InvalidActionError("Player not in this game");
+  }
+
+  // If the host is leaving, end the game for everyone
+  if (player.isHost) {
+    return { shouldEndGame: true };
+  }
+
+  // Remove the player from the game
+  const { [payload.actorId]: removedPlayer, ...remainingPlayers } =
+    snapshot.players;
+  const newPlayerOrder = snapshot.playerOrder.filter(
+    (id) => id !== payload.actorId
+  );
+
+  // If the leaving player was the judge, clear the judge
+  const wasJudge = snapshot.round.judgeId === payload.actorId;
+
+  return {
+    shouldEndGame: false,
+    newSnapshot: {
+      ...snapshot,
+      players: remainingPlayers,
+      playerOrder: newPlayerOrder,
+      round: {
+        ...snapshot.round,
+        // Clear judge if the leaving player was the judge
+        judgeId: wasJudge ? null : snapshot.round.judgeId,
+        // Remove their submission if any
+        submissions: Object.fromEntries(
+          Object.entries(snapshot.round.submissions).filter(
+            ([playerId]) => playerId !== payload.actorId
+          )
+        ),
+      },
+    },
   };
 }

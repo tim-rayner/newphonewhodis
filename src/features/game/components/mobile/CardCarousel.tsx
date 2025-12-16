@@ -4,6 +4,7 @@ import {
   cardHasImage,
   getReplyCard,
   getReplyDisplayText,
+  isWildcard,
 } from "@/features/game/assets/cards";
 import { useGifCacheContext } from "@/features/game/context";
 import { cn } from "@/lib/utils";
@@ -11,18 +12,22 @@ import { AnimatePresence, motion, PanInfo, useAnimation } from "framer-motion";
 import { Check, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
+import { WildcardCard, WildcardInput } from "./WildcardInput";
 
 interface CardCarouselProps {
   cardIds: string[];
   canSubmit: boolean;
   submittedCardId: string | null;
-  onSubmit: (cardId: string) => void;
+  onSubmit: (cardId: string, wildcardText?: string) => void;
   isPending: boolean;
+  /** Map of wildcard cardId -> custom text (from game state) */
+  wildcardTexts?: Record<string, string>;
 }
 
 /**
  * Mobile-optimized card carousel with swipe gestures
  * Shows one card prominently with peek of adjacent cards
+ * Supports wildcard cards with custom text input
  */
 export function CardCarousel({
   cardIds,
@@ -30,12 +35,19 @@ export function CardCarousel({
   submittedCardId,
   onSubmit,
   isPending,
+  wildcardTexts = {},
 }: CardCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
+  const [wildcardModalOpen, setWildcardModalOpen] = useState(false);
   const controls = useAnimation();
 
   const cardCount = cardIds.length;
+
+  // Check if the selected card is a wildcard
+  const selectedIsWildcard = selectedCardId
+    ? isWildcard(selectedCardId)
+    : false;
 
   const goToCard = useCallback(
     (index: number) => {
@@ -64,17 +76,46 @@ export function CardCarousel({
 
   const handleCardSelect = (cardId: string) => {
     if (!canSubmit || isPending) return;
-    setSelectedCardId(cardId === selectedCardId ? null : cardId);
+
+    // If selecting a wildcard, open the modal immediately
+    if (isWildcard(cardId)) {
+      setSelectedCardId(cardId);
+      setWildcardModalOpen(true);
+    } else {
+      // Toggle selection for regular cards
+      setSelectedCardId(cardId === selectedCardId ? null : cardId);
+    }
   };
 
   const handleConfirmSubmit = () => {
     if (selectedCardId && canSubmit && !isPending) {
-      onSubmit(selectedCardId);
+      // For wildcards, this shouldn't be called directly (modal handles it)
+      if (!selectedIsWildcard) {
+        onSubmit(selectedCardId);
+      }
     }
+  };
+
+  const handleWildcardSubmit = (wildcardText: string) => {
+    if (selectedCardId && canSubmit && !isPending) {
+      onSubmit(selectedCardId, wildcardText);
+      setWildcardModalOpen(false);
+      setSelectedCardId(null);
+    }
+  };
+
+  const handleWildcardModalClose = () => {
+    setWildcardModalOpen(false);
+    setSelectedCardId(null);
   };
 
   // Show submitted card state
   if (submittedCardId) {
+    const submittedIsWildcard = isWildcard(submittedCardId);
+    const displayText = submittedIsWildcard
+      ? wildcardTexts[submittedCardId] || "Custom reply"
+      : getReplyDisplayText(submittedCardId, wildcardTexts);
+
     return (
       <motion.div
         className="flex flex-col items-center gap-4 py-6"
@@ -85,12 +126,16 @@ export function CardCarousel({
           <Check className="w-5 h-5" />
           <span className="text-sm font-medium">Card Submitted!</span>
         </div>
-        <ReplyCard
-          cardId={submittedCardId}
-          text={getReplyDisplayText(submittedCardId)}
-          isSubmitted
-          size="lg"
-        />
+        {submittedIsWildcard ? (
+          <SubmittedWildcardCard text={displayText} />
+        ) : (
+          <ReplyCard
+            cardId={submittedCardId}
+            text={displayText}
+            isSubmitted
+            size="lg"
+          />
+        )}
       </motion.div>
     );
   }
@@ -104,135 +149,188 @@ export function CardCarousel({
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      {/* Card display area */}
-      <div className="relative h-64 overflow-hidden">
-        {/* Navigation buttons */}
-        <button
-          onClick={() => goToCard(currentIndex - 1)}
-          disabled={currentIndex === 0}
-          className={cn(
-            "absolute left-2 top-1/2 -translate-y-1/2 z-20",
-            "w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm",
-            "flex items-center justify-center",
-            "text-white transition-opacity",
-            currentIndex === 0 ? "opacity-30" : "opacity-100 active:scale-95"
-          )}
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-
-        <button
-          onClick={() => goToCard(currentIndex + 1)}
-          disabled={currentIndex === cardCount - 1}
-          className={cn(
-            "absolute right-2 top-1/2 -translate-y-1/2 z-20",
-            "w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm",
-            "flex items-center justify-center",
-            "text-white transition-opacity",
-            currentIndex === cardCount - 1
-              ? "opacity-30"
-              : "opacity-100 active:scale-95"
-          )}
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
-
-        {/* Cards */}
-        <motion.div
-          className="flex items-center justify-center h-full"
-          drag="x"
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.2}
-          onDragEnd={handleDragEnd}
-          animate={controls}
-        >
-          <AnimatePresence mode="popLayout">
-            {cardIds.map((cardId, index) => {
-              const offset = index - currentIndex;
-              const isActive = offset === 0;
-              const isVisible = Math.abs(offset) <= 1;
-
-              if (!isVisible) return null;
-
-              return (
-                <motion.div
-                  key={cardId}
-                  className="absolute"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{
-                    x: offset * 200,
-                    scale: isActive ? 1 : 0.85,
-                    opacity: isActive ? 1 : 0.5,
-                    zIndex: isActive ? 10 : 5,
-                    rotateY: offset * -5,
-                  }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 30,
-                  }}
-                >
-                  <ReplyCard
-                    cardId={cardId}
-                    text={getReplyDisplayText(cardId)}
-                    isSelected={selectedCardId === cardId}
-                    isActive={isActive}
-                    onClick={() => isActive && handleCardSelect(cardId)}
-                    disabled={!canSubmit || isPending}
-                  />
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </motion.div>
-      </div>
-
-      {/* Dot indicators */}
-      <div className="flex justify-center gap-2">
-        {cardIds.map((_, index) => (
+    <>
+      <div className="flex flex-col gap-4">
+        {/* Card display area */}
+        <div className="relative h-64 overflow-hidden">
+          {/* Navigation buttons */}
           <button
-            key={index}
-            onClick={() => goToCard(index)}
+            onClick={() => goToCard(currentIndex - 1)}
+            disabled={currentIndex === 0}
             className={cn(
-              "w-2 h-2 rounded-full transition-all",
-              index === currentIndex
-                ? "bg-primary w-4"
-                : "bg-muted-foreground/30"
-            )}
-          />
-        ))}
-      </div>
-
-      {/* Card counter */}
-      <p className="text-center text-sm text-muted-foreground">
-        {currentIndex + 1} of {cardCount} cards
-      </p>
-
-      {/* Submit button */}
-      {selectedCardId && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex justify-center"
-        >
-          <button
-            onClick={handleConfirmSubmit}
-            disabled={isPending}
-            className={cn(
-              "px-8 py-3 rounded-full font-semibold text-white",
-              "bg-gradient-to-r from-green-500 to-emerald-600",
-              "shadow-lg shadow-green-500/30",
-              "active:scale-95 transition-transform",
-              isPending && "opacity-50"
+              "absolute left-2 top-1/2 -translate-y-1/2 z-20",
+              "w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm",
+              "flex items-center justify-center",
+              "text-white transition-opacity",
+              currentIndex === 0 ? "opacity-30" : "opacity-100 active:scale-95"
             )}
           >
-            {isPending ? "Submitting..." : "Send Reply"}
+            <ChevronLeft className="w-6 h-6" />
           </button>
-        </motion.div>
+
+          <button
+            onClick={() => goToCard(currentIndex + 1)}
+            disabled={currentIndex === cardCount - 1}
+            className={cn(
+              "absolute right-2 top-1/2 -translate-y-1/2 z-20",
+              "w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm",
+              "flex items-center justify-center",
+              "text-white transition-opacity",
+              currentIndex === cardCount - 1
+                ? "opacity-30"
+                : "opacity-100 active:scale-95"
+            )}
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+
+          {/* Cards */}
+          <motion.div
+            className="flex items-center justify-center h-full"
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.2}
+            onDragEnd={handleDragEnd}
+            animate={controls}
+          >
+            <AnimatePresence mode="popLayout">
+              {cardIds.map((cardId, index) => {
+                const offset = index - currentIndex;
+                const isActive = offset === 0;
+                const isVisible = Math.abs(offset) <= 1;
+                const cardIsWildcard = isWildcard(cardId);
+
+                if (!isVisible) return null;
+
+                return (
+                  <motion.div
+                    key={cardId}
+                    className="absolute"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{
+                      x: offset * 200,
+                      scale: isActive ? 1 : 0.85,
+                      opacity: isActive ? 1 : 0.5,
+                      zIndex: isActive ? 10 : 5,
+                      rotateY: offset * -5,
+                    }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 30,
+                    }}
+                  >
+                    {cardIsWildcard ? (
+                      <WildcardCard
+                        isSelected={selectedCardId === cardId}
+                        isActive={isActive}
+                        onClick={() => isActive && handleCardSelect(cardId)}
+                        disabled={!canSubmit || isPending}
+                      />
+                    ) : (
+                      <ReplyCard
+                        cardId={cardId}
+                        text={getReplyDisplayText(cardId, wildcardTexts)}
+                        isSelected={selectedCardId === cardId}
+                        isActive={isActive}
+                        onClick={() => isActive && handleCardSelect(cardId)}
+                        disabled={!canSubmit || isPending}
+                      />
+                    )}
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </motion.div>
+        </div>
+
+        {/* Dot indicators */}
+        <div className="flex justify-center gap-2">
+          {cardIds.map((cardId, index) => (
+            <button
+              key={index}
+              onClick={() => goToCard(index)}
+              className={cn(
+                "w-2 h-2 rounded-full transition-all",
+                index === currentIndex
+                  ? isWildcard(cardId)
+                    ? "bg-purple-500 w-4"
+                    : "bg-primary w-4"
+                  : "bg-muted-foreground/30"
+              )}
+            />
+          ))}
+        </div>
+
+        {/* Card counter */}
+        <p className="text-center text-sm text-muted-foreground">
+          {currentIndex + 1} of {cardCount} cards
+        </p>
+
+        {/* Submit button (only for non-wildcard cards) */}
+        {selectedCardId && !selectedIsWildcard && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex justify-center"
+          >
+            <button
+              onClick={handleConfirmSubmit}
+              disabled={isPending}
+              className={cn(
+                "px-8 py-3 rounded-full font-semibold text-white",
+                "bg-gradient-to-r from-green-500 to-emerald-600",
+                "shadow-lg shadow-green-500/30",
+                "active:scale-95 transition-transform",
+                isPending && "opacity-50"
+              )}
+            >
+              {isPending ? "Submitting..." : "Send Reply"}
+            </button>
+          </motion.div>
+        )}
+      </div>
+
+      {/* Wildcard input modal */}
+      <WildcardInput
+        isOpen={wildcardModalOpen}
+        onClose={handleWildcardModalClose}
+        onSubmit={handleWildcardSubmit}
+        isPending={isPending}
+      />
+    </>
+  );
+}
+
+/**
+ * Displays a submitted wildcard with its custom text
+ */
+function SubmittedWildcardCard({ text }: { text: string }) {
+  return (
+    <motion.div
+      className={cn(
+        "relative rounded-2xl w-56 h-60",
+        "bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400",
+        "border-2 border-green-500 shadow-xl"
       )}
-    </div>
+    >
+      <div className="flex flex-col h-full p-4">
+        <div className="flex items-center gap-1.5">
+          <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
+            <Check className="w-3.5 h-3.5 text-white" />
+          </div>
+          <span className="text-[10px] text-white/80 uppercase tracking-wider font-bold">
+            Wildcard
+          </span>
+        </div>
+        <div className="flex-1 flex items-center justify-center p-2">
+          <p className="text-white font-medium text-center text-sm leading-snug">
+            {text}
+          </p>
+        </div>
+      </div>
+    </motion.div>
   );
 }
 
@@ -264,45 +362,48 @@ function ReplyCard({
   const card = getReplyCard(cardId);
   const hasImage = cardHasImage(card);
 
-  const [gifUrl, setGifUrl] = useState<string | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(false);
+  // Initialize with cached value if available
+  const [gifUrl, setGifUrl] = useState<string | undefined>(() => {
+    if (!hasImage) return undefined;
+    return getCachedGif(cardId);
+  });
+  // Track fetch completion to derive loading state
+  const [fetchComplete, setFetchComplete] = useState(() => {
+    // If we have a cached URL on init, fetch is already complete
+    if (!hasImage) return true;
+    return !!getCachedGif(cardId);
+  });
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
+  // Derive loading state instead of setting it synchronously in effect
+  const isLoading = hasImage && !fetchComplete;
+
   // Fetch GIF on mount or when cardId changes
+  // getGifForCard handles caching internally and returns quickly if cached
   useEffect(() => {
     if (!hasImage) return;
 
-    // Check cache first
-    const cached = getCachedGif(cardId);
-    if (cached) {
-      setGifUrl(cached);
-      return;
-    }
-
-    // Fetch new GIF
     let cancelled = false;
-    setIsLoading(true);
 
     getGifForCard(cardId)
       .then((url) => {
         if (!cancelled && url) {
           setGifUrl(url);
+          setFetchComplete(true);
         }
       })
       .catch((error) => {
         console.error(`[ReplyCard] Error fetching GIF for ${cardId}:`, error);
-      })
-      .finally(() => {
         if (!cancelled) {
-          setIsLoading(false);
+          setFetchComplete(true);
         }
       });
 
     return () => {
       cancelled = true;
     };
-  }, [hasImage, cardId, getCachedGif, getGifForCard]);
+  }, [hasImage, cardId, getGifForCard]);
 
   return (
     <motion.div

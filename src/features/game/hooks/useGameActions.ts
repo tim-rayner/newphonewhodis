@@ -4,11 +4,13 @@ import {
   judgeDeals,
   judgePicked,
   judgeVotes,
+  leaveGame as leaveGameAction,
   playerAnswers,
   restartGame,
   roundEnds,
   roundStarts,
 } from "@/app/actions/game";
+import { trpc } from "@/external/trpc/client";
 import { useCallback, useState, useTransition } from "react";
 
 export type ActionError = {
@@ -29,10 +31,12 @@ interface UseGameActionsReturn {
   pickJudge: (judgeId?: string) => Promise<void>;
   dealCards: () => Promise<void>;
   startRound: () => Promise<void>;
-  submitCard: (cardId: string) => Promise<void>;
+  submitCard: (cardId: string, wildcardText?: string) => Promise<void>;
   endRound: () => Promise<void>;
   vote: (winningPlayerId?: string | null) => Promise<void>;
   restart: () => Promise<void>;
+  endGame: () => Promise<void>;
+  leaveGame: () => Promise<void>;
 }
 
 /**
@@ -45,6 +49,9 @@ export function useGameActions({
 }: UseGameActionsOptions): UseGameActionsReturn {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<ActionError | null>(null);
+
+  // tRPC mutation for deleting game (more secure than server action)
+  const deleteGameMutation = trpc.game.deleteGame.useMutation();
 
   const clearError = useCallback(() => setError(null), []);
 
@@ -97,9 +104,9 @@ export function useGameActions({
   }, [gameId, playerId, handleAction]);
 
   const submitCard = useCallback(
-    async (cardId: string) => {
+    async (cardId: string, wildcardText?: string) => {
       await handleAction(() =>
-        playerAnswers({ gameId, actorId: playerId!, cardId })
+        playerAnswers({ gameId, actorId: playerId!, cardId, wildcardText })
       );
     },
     [gameId, playerId, handleAction]
@@ -122,8 +129,37 @@ export function useGameActions({
     await handleAction(() => restartGame({ gameId, actorId: playerId! }));
   }, [gameId, playerId, handleAction]);
 
+  const endGame = useCallback(async () => {
+    if (!playerId) {
+      const err = { message: "Player not identified", code: "NO_PLAYER" };
+      setError(err);
+      onError?.(err);
+      return;
+    }
+
+    setError(null);
+
+    try {
+      await deleteGameMutation.mutateAsync({ gameId, actorId: playerId });
+    } catch (e) {
+      const err: ActionError = {
+        message: e instanceof Error ? e.message : "Failed to end game",
+        code: "ACTION_ERROR",
+      };
+      setError(err);
+      onError?.(err);
+    }
+  }, [gameId, playerId, deleteGameMutation, onError]);
+
+  const leaveGame = useCallback(async () => {
+    await handleAction(() => leaveGameAction({ gameId, actorId: playerId! }));
+  }, [gameId, playerId, handleAction]);
+
+  // Combine pending states from useTransition and tRPC mutation
+  const isAnyPending = isPending || deleteGameMutation.isPending;
+
   return {
-    isPending,
+    isPending: isAnyPending,
     error,
     clearError,
     pickJudge,
@@ -133,5 +169,7 @@ export function useGameActions({
     endRound,
     vote,
     restart,
+    endGame,
+    leaveGame,
   };
 }

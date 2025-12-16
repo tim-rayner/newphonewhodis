@@ -45,6 +45,8 @@ export const gameSnapshotSchema = z.object({
   phase: gamePhaseSchema,
   // Map of cardId -> gifUrl for GIF cards (assigned server-side when dealt)
   gifUrls: z.record(z.string(), z.string()).default({}),
+  // Map of wildcardId -> customText for wildcard cards (set when player submits)
+  wildcardTexts: z.record(z.string(), z.string()).default({}),
 });
 
 export type GameSnapshotSchema = z.infer<typeof gameSnapshotSchema>;
@@ -54,3 +56,10 @@ export const getGameInputSchema = z.object({
 });
 
 export type GetGameInputSchema = z.infer<typeof getGameInputSchema>;
+
+export const deleteGameInputSchema = z.object({
+  gameId: z.string().uuid(),
+  actorId: z.string().min(1),
+});
+
+export type DeleteGameInputSchema = z.infer<typeof deleteGameInputSchema>;

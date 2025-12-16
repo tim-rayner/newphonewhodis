@@ -17,3 +17,10 @@ export {
   type GiphyGifObject,
   type GiphySearchResponse,
 } from "./giphyFilter";
+export {
+  WILDCARD_MAX_LENGTH,
+  applyWildcardChance,
+  generateWildcardId,
+  isWildcard,
+  maybeWildcard,
+} from "./wildcards";

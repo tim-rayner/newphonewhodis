@@ -4,6 +4,7 @@
 export { judgeDeals } from "./judgeDeals";
 export { judgePicked } from "./judgePicked";
 export { judgeVotes } from "./judgeVotes";
+export { leaveGame } from "./leaveGame";
 export { playerAnswers } from "./playerAnswers";
 export { restartGame } from "./restartGame";
 export { roundEnds } from "./roundEnds";

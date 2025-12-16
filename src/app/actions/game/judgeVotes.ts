@@ -10,7 +10,11 @@ import {
 } from "@/features/game/domain/handlers";
 import type { JudgeVotesPayload } from "@/features/game/types/events";
 import type { GameSnapshotSchema } from "@/features/game/types/schema";
-import { assignGifUrls, getAllDealtCardIds } from "@/features/game/utils";
+import {
+  assignGifUrls,
+  getAllDealtCardIds,
+  maybeWildcard,
+} from "@/features/game/utils";
 import { eq } from "drizzle-orm";
 
 export async function judgeVotes(payload: JudgeVotesPayload) {
@@ -23,26 +27,61 @@ export async function judgeVotes(payload: JudgeVotesPayload) {
   }
 
   const currentState = game.state as GameSnapshotSchema;
+
+  // Track cards before the vote to identify replenishment cards later
+  const cardsBefore = new Set<string>();
+  for (const player of Object.values(currentState.players)) {
+    for (const cardId of player.hand) {
+      cardsBefore.add(cardId);
+    }
+  }
+
   const afterVote = handleJudgeVotes(currentState, payload);
 
+  // Apply wildcard chance to replenishment cards (new cards added after vote)
+  let playersWithWildcards = afterVote.players;
+  const newPlayers = { ...afterVote.players };
+  let hasNewCards = false;
+
+  for (const [playerId, player] of Object.entries(afterVote.players)) {
+    const newHand = player.hand.map((cardId) => {
+      // If this card wasn't in the hand before, it's a replenishment card
+      if (!cardsBefore.has(cardId)) {
+        hasNewCards = true;
+        return maybeWildcard(cardId);
+      }
+      return cardId;
+    });
+    newPlayers[playerId] = { ...player, hand: newHand };
+  }
+
+  if (hasNewCards) {
+    playersWithWildcards = newPlayers;
+  }
+
+  const afterVoteWithWildcards: GameSnapshotSchema = {
+    ...afterVote,
+    players: playersWithWildcards,
+  };
+
   // If game is finished, just save and broadcast
-  if (afterVote.phase === "FINISHED") {
+  if (afterVoteWithWildcards.phase === "FINISHED") {
     await db
       .update(games)
-      .set({ state: afterVote })
+      .set({ state: afterVoteWithWildcards })
       .where(eq(games.id, payload.gameId));
 
-    await broadcastGameState(payload.gameId, afterVote);
+    await broadcastGameState(payload.gameId, afterVoteWithWildcards);
     return { success: true };
   }
 
   // Game continues - broadcast LOBBY state first so clients see the winner
-  await broadcastGameState(payload.gameId, afterVote);
+  await broadcastGameState(payload.gameId, afterVoteWithWildcards);
 
   // Chain: auto-deal cards for next round (new judge from rotation)
-  const afterDeal = handleJudgeDeals(afterVote, {
+  const afterDeal = handleJudgeDeals(afterVoteWithWildcards, {
     gameId: payload.gameId,
-    actorId: afterVote.round.judgeId!,
+    actorId: afterVoteWithWildcards.round.judgeId!,
   });
 
   // Chain: auto-start the round

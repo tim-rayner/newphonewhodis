@@ -6,7 +6,11 @@ import { broadcastGameState } from "@/external/supabase/broadcast";
 import { handleJudgeDeals } from "@/features/game/domain/handlers";
 import type { JudgeDealsPayload } from "@/features/game/types/events";
 import type { GameSnapshotSchema } from "@/features/game/types/schema";
-import { assignGifUrls, getAllDealtCardIds } from "@/features/game/utils";
+import {
+  applyWildcardChance,
+  assignGifUrls,
+  getAllDealtCardIds,
+} from "@/features/game/utils";
 import { eq } from "drizzle-orm";
 
 export async function judgeDeals(payload: JudgeDealsPayload) {
@@ -18,27 +22,45 @@ export async function judgeDeals(payload: JudgeDealsPayload) {
     throw new Error("Game not found");
   }
 
-  const afterDeals = handleJudgeDeals(
-    game.state as GameSnapshotSchema,
-    payload
-  );
+  const currentState = game.state as GameSnapshotSchema;
+  const isFirstDeal = currentState.round.roundNumber === 0;
+
+  const afterDeals = handleJudgeDeals(currentState, payload);
+
+  // Apply wildcard chance to newly dealt cards (only on first deal)
+  let playersWithWildcards = afterDeals.players;
+  if (isFirstDeal) {
+    playersWithWildcards = { ...afterDeals.players };
+    for (const [playerId, player] of Object.entries(afterDeals.players)) {
+      const handWithWildcards = applyWildcardChance(player.hand);
+      playersWithWildcards[playerId] = {
+        ...player,
+        hand: handWithWildcards,
+      };
+    }
+  }
+
+  const snapshotWithWildcards: GameSnapshotSchema = {
+    ...afterDeals,
+    players: playersWithWildcards,
+  };
 
   // Assign GIF URLs to newly dealt cards (including prompt card)
-  const allDealtCardIds = getAllDealtCardIds(afterDeals.players);
+  const allDealtCardIds = getAllDealtCardIds(snapshotWithWildcards.players);
 
   // Include prompt card in the list of cards to check
   const cardsToCheck = [...allDealtCardIds];
-  if (afterDeals.round.promptCard) {
-    cardsToCheck.push(afterDeals.round.promptCard);
+  if (snapshotWithWildcards.round.promptCard) {
+    cardsToCheck.push(snapshotWithWildcards.round.promptCard);
   }
 
   const updatedGifUrls = await assignGifUrls(
     cardsToCheck,
-    afterDeals.gifUrls ?? {}
+    snapshotWithWildcards.gifUrls ?? {}
   );
 
   const newSnapshot: GameSnapshotSchema = {
-    ...afterDeals,
+    ...snapshotWithWildcards,
     gifUrls: updatedGifUrls,
   };
 

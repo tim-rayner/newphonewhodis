@@ -6,6 +6,7 @@ import {
   getPromptCard,
   getReplyCard,
   getReplyDisplayText,
+  isWildcard,
 } from "@/features/game/assets/cards";
 import type { GameSnapshotSchema } from "@/features/game/types/schema";
 import { cn } from "@/lib/utils";
@@ -265,7 +266,11 @@ export function JudgingPhase({
             {submissions.map(([playerId, cardId], index) => {
               if (index !== currentIndex) return null;
 
-              const replyCard = getReplyCard(cardId);
+              const cardIsWildcard = isWildcard(cardId);
+              const replyCard = cardIsWildcard ? null : getReplyCard(cardId);
+              const displayText = cardIsWildcard
+                ? state.wildcardTexts?.[cardId] || "Custom reply"
+                : getReplyDisplayText(cardId, state.wildcardTexts);
 
               return (
                 <motion.div
@@ -293,9 +298,9 @@ export function JudgingPhase({
 
                       <ImageMessage
                         type="reply"
-                        text={getReplyDisplayText(cardId)}
+                        text={displayText}
                         cardId={cardId}
-                        hasImage={cardHasImage(replyCard)}
+                        hasImage={!cardIsWildcard && cardHasImage(replyCard)}
                         isDelivered
                         isRead
                         delay={0.2}
