@@ -1,5 +1,6 @@
 import { db } from "@/db";
 import { games } from "@/db/schema";
+import { broadcastGameState } from "@/external/supabase/broadcast";
 import { GameSnapshotSchema } from "@/features/game/types/schema";
 import type { Player } from "@/features/player/types/schema";
 import { Game } from "@/shared/types/gameTypes";
@@ -86,6 +87,9 @@ export async function joinGame(
   }
 
   await db.update(games).set({ state }).where(eq(games.id, validGame.id));
+
+  // Broadcast updated state to existing players
+  await broadcastGameState(validGame.id, state);
 
   return { success: true, data: validGame };
 }

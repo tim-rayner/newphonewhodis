@@ -1,451 +1,1201 @@
 [
   {
     "id": "prompt_gif_001",
-    "value": "This is my current situation:",
+    "value": "This is you rn:",
     "type": "prompt",
     "img": "gif"
   },
   {
     "id": "prompt_gif_002",
-    "value": "Rate my energy right now:",
+    "value": "Saw this and thought of you:",
     "type": "prompt",
     "img": "gif"
   },
   {
     "id": "prompt_gif_003",
-    "value": "How should I respond to this?",
+    "value": "This is what happens if you don't respond:",
     "type": "prompt",
     "img": "gif"
   },
   {
     "id": "prompt_gif_004",
-    "value": "This just happened and I need advice:",
+    "value": "Me waiting for you to text back:",
     "type": "prompt",
     "img": "gif"
   },
   {
     "id": "prompt_gif_005",
-    "value": "POV: you're me right now",
+    "value": "You last night:",
     "type": "prompt",
     "img": "gif"
   },
   {
     "id": "prompt_gif_006",
-    "value": "Is this a red flag?",
+    "value": "This will be us if you say yes:",
     "type": "prompt",
     "img": "gif"
   },
   {
     "id": "prompt_gif_007",
-    "value": "Explain this vibe I'm giving off:",
+    "value": "Don't be like this:",
     "type": "prompt",
     "img": "gif"
   },
   {
     "id": "prompt_gif_008",
-    "value": "Me trying to explain what happened:",
+    "value": "Me when I see you:",
     "type": "prompt",
     "img": "gif"
   },
   {
     "id": "prompt_gif_009",
-    "value": "This is what I woke up to:",
+    "value": "Your vibe check results are in:",
     "type": "prompt",
     "img": "gif"
   },
   {
     "id": "prompt_gif_010",
-    "value": "I need you to react to this:",
+    "value": "This is how I'm pulling up:",
     "type": "prompt",
     "img": "gif"
   },
   {
     "id": "prompt_gif_011",
-    "value": "No context, just this:",
+    "value": "Proof:",
     "type": "prompt",
     "img": "gif"
   },
   {
     "id": "prompt_gif_012",
-    "value": "My brain at 3am:",
+    "value": "You seeing this?",
     "type": "prompt",
     "img": "gif"
   },
   {
     "id": "prompt_gif_013",
-    "value": "When they ask what's wrong:",
+    "value": "Can you explain this?",
     "type": "prompt",
     "img": "gif"
   },
   {
     "id": "prompt_gif_014",
-    "value": "The universe sent me this sign:",
+    "value": "This is what I woke up to:",
     "type": "prompt",
     "img": "gif"
   },
   {
     "id": "prompt_gif_015",
-    "value": "I can't even explain, just look:",
+    "value": "Found this in my camera roll:",
     "type": "prompt",
     "img": "gif"
   },
   {
+    "id": "prompt_gif_016",
+    "value": "My mood after what you did:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_017",
+    "value": "This reminded me of the situation:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_018",
+    "value": "Rate this on a scale of 1-10:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_019",
+    "value": "Should I be worried about this?",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_020",
+    "value": "Is this normal?",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_021",
+    "value": "Exhibit A:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_022",
+    "value": "This is your final warning:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_023",
+    "value": "Me outside your house:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_024",
+    "value": "Your replacement:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_025",
+    "value": "This is how I dance when I'm happy:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_026",
+    "value": "My reaction when you finally responded:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_027",
+    "value": "The vibes I'm channeling today:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_028",
+    "value": "What I'm about to do:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_029",
+    "value": "Evidence from last night:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_030",
+    "value": "Your future if you ignore me:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_031",
+    "value": "Me trying to explain to the cops:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_032",
+    "value": "What I looked like reading your text:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_033",
+    "value": "This is giving:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_034",
+    "value": "You walking into work tomorrow:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_035",
+    "value": "My current emotional state:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_036",
+    "value": "Us at the funeral:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_037",
+    "value": "Your FBI agent watching you type:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_038",
+    "value": "What the neighbors saw:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_039",
+    "value": "My lawyer's face when I showed them:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_gif_040",
+    "value": "The vibes at the crime scene:",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_wrong_number_001",
+    "value": "Hey, is this still the number for the clown?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_002",
+    "value": "The eagle has landed. Proceed as planned.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_003",
+    "value": "I left something at your place last night. Don't open it.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_004",
+    "value": "Mom said you'd help me move the body.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_005",
+    "value": "The package is ready. You know what to do.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_006",
+    "value": "I'm outside. Why are your lights off?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_007",
+    "value": "Your grandmother gave me this number. She says hi.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_008",
+    "value": "The ritual is complete. Your turn.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_009",
+    "value": "I forgive you for what you did in 2019.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_010",
+    "value": "The test came back positive. We need to talk.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_011",
+    "value": "They know. Run.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_012",
+    "value": "I found your diary. Chapter 7 was... unexpected.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_013",
+    "value": "The goat is in position. Awaiting further instructions.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_014",
+    "value": "I've been watching you sleep. You snore.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_015",
+    "value": "Quick question: what's your blood type?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_016",
+    "value": "The séance worked. She wants her sweater back.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_017",
+    "value": "I'm at the pharmacy. What size coffin did you need?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_018",
+    "value": "Don't go home tonight. Trust me.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_019",
+    "value": "Your car looks nice from up here.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_020",
+    "value": "The wedding is still on. Wear something black.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_021",
+    "value": "I put the thing in the place. You're welcome.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_022",
+    "value": "Meet me at the usual spot. Bring the costume.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_023",
+    "value": "Your ex says you still owe them money.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_024",
+    "value": "The pizza guy is asking weird questions about you.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_wrong_number_025",
+    "value": "I need you to lie to the police for me.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_001",
+    "value": "Per my last email, the bodies are in the breakroom.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_002",
+    "value": "Let's circle back on why you weren't at the sacrifice.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_003",
+    "value": "Please see attached restraining order.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_004",
+    "value": "As discussed, the merger will require human sacrifice.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_005",
+    "value": "Re: your performance review. Please clean out your desk. And your soul.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_006",
+    "value": "HR would like to discuss the incident in the elevator.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_007",
+    "value": "Quick sync: the shareholders want blood.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_008",
+    "value": "Moving forward, please stop doing that in meetings.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_009",
+    "value": "I'm looping in Legal because of what you just said.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_010",
+    "value": "As per the NDA, you saw nothing last night.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_011",
+    "value": "Friendly reminder: mandatory fun is tomorrow. Attendance is not optional. Neither is the oath.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_012",
+    "value": "The team-building exercise went too far. We need a cover story.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_013",
+    "value": "Just following up on the bribe we discussed.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_014",
+    "value": "Your quarterly review is in. It's mostly screaming.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_015",
+    "value": "Synergy update: the merger requires your firstborn.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_016",
+    "value": "Can you take the fall for this? Asking for a manager.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_017",
+    "value": "Your LinkedIn says you're 'open to opportunities.' Prove it.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_018",
+    "value": "Please submit your timesheet and your alibi.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_019",
+    "value": "The CEO needs a kidney. You've been nominated.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_corporate_020",
+    "value": "Attached is the PowerPoint explaining why you're being sacrificed.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_001",
+    "value": "I found your underwear. In my car. I don't know you.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_002",
+    "value": "Last night was fun. The goat really tied it together.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_003",
+    "value": "My therapist wants to know why I texted you at 3am.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_004",
+    "value": "Are you free tonight? Asking for a friend. The friend is me. I'm lonely.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_005",
+    "value": "The safe word is 'budget cuts.'",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_006",
+    "value": "You up? The cult meeting ran late.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_007",
+    "value": "Netflix and... whatever this is?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_008",
+    "value": "I'm outside. Wearing what we discussed.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_009",
+    "value": "The neighbors complained about last time. Let's be louder.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_010",
+    "value": "I showed your picture to my mom. She said no. I said yes.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_011",
+    "value": "Come over. My roommate's out and the candles are lit.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_012",
+    "value": "I've been thinking about you. And that thing you did. With the thing...",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_013",
+    "value": "The handcuffs were a nice touch. Where'd you learn that?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_014",
+    "value": "My dating app matched us. Then crashed. Coincidence?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_015",
+    "value": "Roses are red, violets are blue, I'm outside your window, watching you.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_016",
+    "value": "The massage parlor gave me your number. Thoughts?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_017",
+    "value": "I don't usually do this, but the moon's in retrograde.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_018",
+    "value": "My ex said I'd never find someone worse. Prove them wrong?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_019",
+    "value": "I accidentally sent you something. Delete it. Or don't. Your choice...",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_dirty_020",
+    "value": "The hotel wants to know if we need late checkout again.",
+    "type": "prompt",
+    "img": null
+  },
+  {
     "id": "prompt_chaotic_001",
-    "value": "You don't know me, but this felt like the right number to message.",
+    "value": "I've made a huge mistake and you're the only one I trust.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_002",
-    "value": "I'm having a moment and need guidance. Thoughts?",
+    "value": "Delete our messages. Now. I'll explain later.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_003",
-    "value": "Long story short… what should I do next?",
+    "value": "You didn't see me tonight. Got it?",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_004",
-    "value": "Serious question: does this seem normal to you?",
+    "value": "I told everyone we're engaged. Play along.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_005",
-    "value": "Someone gave me your number and said you'd know what to say.",
+    "value": "The zoo called. They want you to stop.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_006",
-    "value": "I shouldn't be texting this but… here we are.",
+    "value": "I just got arrested. Bring bail money and snacks.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_007",
-    "value": "Someone told me you give 'unfiltered advice.' True?",
+    "value": "Whatever they told you, I can explain.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_008",
-    "value": "I need a reaction. Any reaction.",
+    "value": "So apparently 'borrowing' is different from 'stealing.'",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_009",
-    "value": "This might be a mistake, but what do you think?",
+    "value": "I'm at the hospital. Not for me. Well, partially for me.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_010",
-    "value": "I was about to send this to my therapist but accidentally sent it here instead.",
+    "value": "The fire wasn't my fault. The second fire, however...",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_011",
-    "value": "I don't know how to feel about this.",
+    "value": "On a scale of 1 to federal crime, how bad is this?",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_012",
-    "value": "Thoughts? Opinions? Emotional damage?",
+    "value": "The priest said no. The bartender said yes. I'm confused.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_013",
-    "value": "Quick question: what would ANY sane person reply to this?",
+    "value": "Hypothetically, if someone stole a boat...",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_014",
-    "value": "I feel like this requires a response. Your turn.",
+    "value": "Remember that favor you owe me? Time to pay up.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_015",
-    "value": "I'm too embarrassed to show anyone else this.",
+    "value": "I'm in your country for 48 hours. Clear your schedule.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_016",
-    "value": "I panicked and texted the first number I saw. Help.",
+    "value": "The parrot won't stop repeating what you said.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_017",
-    "value": "I'm not emotionally strong enough to process this alone.",
+    "value": "I need you to hold something for me. Don't look inside.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_018",
-    "value": "Someone said you'd have a funny response to this.",
+    "value": "The fortune cookie was right about you.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_019",
-    "value": "I need an opinion from someone unbiased… ish.",
+    "value": "Google 'how to hide a body' and tell me what comes up.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_020",
-    "value": "You seem like the type of person who'd understand.",
+    "value": "I may have started a cult. Accidentally. Mostly accidentally.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_021",
-    "value": "This message has no context. Make some.",
+    "value": "My Uber driver proposed. I panicked and said yes.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_022",
-    "value": "On a scale from normal to deeply concerning… where does this land?",
+    "value": "The bees are angry and they know where you live.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_023",
-    "value": "Tell me how I'm supposed to react to this.",
+    "value": "I'm at a crossroads. Literally. There's a demon here.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_024",
-    "value": "Honest answer only: what would YOU reply?",
+    "value": "I won the lottery. The bad kind. Help.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_chaotic_025",
-    "value": "Imagine this text came from your worst enemy. Now reply accordingly.",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_chaotic_026",
-    "value": "What's the official response to chaos?",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_chaotic_027",
-    "value": "I need a comeback that won't get me arrested.",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_chaotic_028",
-    "value": "I don't know why, but this feels like your problem now.",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_chaotic_029",
-    "value": "This feels like a moment for wisdom. Or stupidity. Dealer's choice.",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_chaotic_030",
-    "value": "Whatever your first instinct is: text that.",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_001",
-    "value": "I need advice from someone who won't judge me.",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_002",
-    "value": "Be honest, am I the problem here?",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_003",
-    "value": "What would you do in this situation?",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_004",
-    "value": "I need your honest opinion on something.",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_005",
-    "value": "How do I politely say no to this?",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_006",
-    "value": "Is it weird if I do this?",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_007",
-    "value": "I need a second opinion before I make a decision.",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_008",
-    "value": "What's the best way to handle this?",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_009",
-    "value": "Am I overthinking this?",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_010",
-    "value": "I need to vent. Are you ready?",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_011",
-    "value": "Can you help me figure out what to say?",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_012",
-    "value": "How would you respond to this?",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_013",
-    "value": "I'm stuck. What do I do?",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_014",
-    "value": "Is this a normal thing people do?",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_015",
-    "value": "What's the correct emotional response to this?",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_016",
-    "value": "Should I say something or just let it go?",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_017",
-    "value": "I need backup. What would you reply?",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_018",
-    "value": "Help me draft a response to this.",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_019",
-    "value": "Am I being dramatic or is this actually a big deal?",
-    "type": "prompt",
-    "img": null
-  },
-  {
-    "id": "prompt_broad_020",
-    "value": "I need to respond but I have no words. Help.",
+    "value": "The witch's curse is real. My skin is turning purple.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_absurd_001",
-    "value": "Someone dared me to text a stranger. Now it's your problem.",
+    "value": "Hey it's me, your future self. You're about to make a mistake.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_absurd_002",
-    "value": "I feel like the universe wants your input on this.",
+    "value": "The simulation is breaking. Did you notice?",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_absurd_003",
-    "value": "Give me a reply that changes absolutely nothing but feels powerful.",
+    "value": "I'm a Nigerian prince and I actually need help this time.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_absurd_004",
-    "value": "Not sure how to explain this one. You'll figure it out.",
+    "value": "Your government-assigned best friend here. Just checking in.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_absurd_005",
-    "value": "I just need someone to respond so I don't feel insane.",
+    "value": "The squirrels have organized. They're coming for you.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_absurd_006",
-    "value": "Pick any vibe and commit to it. Respond accordingly.",
+    "value": "I spoke to God. He mentioned you specifically.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_absurd_007",
-    "value": "I found your number in a fortune cookie. What now?",
+    "value": "Your doppelgänger owes me money. Pay up.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_absurd_008",
-    "value": "My horoscope said to text a stranger. Tag, you're it.",
+    "value": "The aliens want a refund for humanity. You're exhibit A.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_absurd_009",
-    "value": "I need an alibi and you're the first person I thought of.",
+    "value": "Time is a flat circle. So is this pizza I brought you.",
     "type": "prompt",
     "img": null
   },
   {
     "id": "prompt_absurd_010",
-    "value": "Pretend we've been friends for years. What would you say?",
+    "value": "Your childhood imaginary friend says you've changed.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_absurd_011",
+    "value": "The prophecy speaks of one who will read this message...",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_absurd_012",
+    "value": "I found a parallel universe where we're married. Thoughts?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_absurd_013",
+    "value": "My cat told me to text you. Don't ask.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_absurd_014",
+    "value": "According to my calculations, you owe me a sandwich.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_absurd_015",
+    "value": "Congratulations! You've been selected for jury duty in space.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_absurd_016",
+    "value": "I'm writing your biography. What's your biggest regret?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_absurd_017",
+    "value": "The matrix glitched. You were a cat for 3 seconds.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_absurd_018",
+    "value": "Your shadow has been acting suspicious. Thoughts?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_absurd_019",
+    "value": "Plot twist: I'm you from 10 years ago. Don't eat the sushi.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_absurd_020",
+    "value": "The pigeons work for the bourgeoisie. Pass it on.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_threat_001",
+    "value": "I know what you did.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_threat_002",
+    "value": "We have your browser history. Pay up or else.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_threat_003",
+    "value": "This is your conscience speaking. We need to talk.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_threat_004",
+    "value": "I'm three steps ahead of you. Always have been.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_threat_005",
+    "value": "Your secrets aren't as safe as you think.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_threat_006",
+    "value": "Check under your bed. I left you a gift.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_threat_007",
+    "value": "The countdown has begun. You have 24 hours.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_threat_008",
+    "value": "I've seen your search history. I have questions.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_threat_009",
+    "value": "Sleep tight. I'll be watching.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_threat_010",
+    "value": "That thing you buried? It's not there anymore.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_casual_001",
+    "value": "Yo",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_casual_002",
+    "value": "Wanna hang?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_casual_003",
+    "value": "I'm bored. Entertain me.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_casual_004",
+    "value": "What's the move?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_casual_005",
+    "value": "Long time no talk. You alive?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_casual_006",
+    "value": "Guess what.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_casual_007",
+    "value": "You free rn?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_casual_008",
+    "value": "Need advice. Don't judge.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_casual_009",
+    "value": "I have tea. You want tea?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_casual_010",
+    "value": "You'll never believe what just happened.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_family_001",
+    "value": "Your mother says you never call.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_family_002",
+    "value": "Grandma learned to text. This is her first message.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_family_003",
+    "value": "We need to discuss the will. You're not in it.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_family_004",
+    "value": "Your cousin is in town. Hide.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_family_005",
+    "value": "Family dinner is mandatory this year. Bring protection.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_family_006",
+    "value": "Your aunt saw your Instagram. She has concerns.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_family_007",
+    "value": "Dad says to check the basement. Don't ask why.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_family_008",
+    "value": "Your sibling stole your identity. Again.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_family_009",
+    "value": "We're disowning you. It's not personal. Actually, it is.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_family_010",
+    "value": "Your nephew drew a picture of you. It's disturbing.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_ex_001",
+    "value": "I saw your new relationship status. Interesting choice.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_ex_002",
+    "value": "I still have your hoodie. Do you want it back? Do you deserve it back?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_ex_003",
+    "value": "Remember that thing you said? I believed you.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_ex_004",
+    "value": "My therapist says I should text you. Here's why:",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_ex_005",
+    "value": "Drunk me wants to say something. Sober me agrees.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_ex_006",
+    "value": "I'm not stalking you, but your new haircut is a choice.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_ex_007",
+    "value": "The song that played at our wedding came on. I'm suing Spotify.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_ex_008",
+    "value": "We never talked about what happened in Cabo.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_ex_009",
+    "value": "I burned all your stuff. Then I unburned it. Technology.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_ex_010",
+    "value": "Your mom likes my posts more than yours. Thought you should know.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_random_001",
+    "value": "Hey quick question: are lobsters mermaids to scorpions?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_random_002",
+    "value": "If I fight a goose and lose, do I have to follow goose law?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_random_003",
+    "value": "Do you think pigeons have feelings? Asking for a friend.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_random_004",
+    "value": "How many raccoons would it take to overthrow the government?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_random_005",
+    "value": "Is cereal a soup? I need closure.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_random_006",
+    "value": "If I microwave a microwave, what happens?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_random_007",
+    "value": "When does bread become toast? Is there a moment? A ceremony?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_random_008",
+    "value": "Do you think fish know they're wet?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_random_009",
+    "value": "Would you rather fight 100 duck-sized horses or 1 horse-sized duck?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_random_010",
+    "value": "If I legally change my name to 'Defendant,' do I win every court case?",
     "type": "prompt",
     "img": null
   }
