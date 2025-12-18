@@ -45,11 +45,11 @@
     /* Radius */
     --radius: 0.75rem;
 
-    /* Messaging theme specific */
-    --message-green: 142 71% 45%; /* #34c759 */
-    --message-blue: 211 100% 50%; /* #0a84ff - iMessage blue */
+    /* Messaging theme specific - WCAG AA compliant colors (4.5:1+ contrast with white) */
+    --message-green: 142 70% 32%; /* #1a7d3c - accessible green (~5.1:1 contrast) */
+    --message-blue: 211 100% 38%; /* #0061c2 - accessible blue (~5.0:1 contrast) */
     --message-bubble-incoming: 0 0% 23%; /* #3a3a3c */
-    --message-bubble-outgoing: 142 71% 45%; /* #34c759 */
+    --message-bubble-outgoing: 142 70% 32%; /* #1a7d3c - matches message-green */
     --chat-timestamp: 0 0% 56%; /* #8e8e93 */
 
     /* Phone frame */
@@ -81,7 +81,7 @@
     --ring: 142 71% 45%;
 
     --message-bubble-incoming: 0 0% 90%; /* #e5e5ea */
-    --message-bubble-outgoing: 142 71% 45%;
+    --message-bubble-outgoing: 142 70% 32%; /* #1a7d3c - accessible green */
     --chat-timestamp: 0 0% 56%;
   }
 }

@@ -80,12 +80,12 @@ export function MessageBubble({
           !hasGif && "px-4 py-2.5",
           // Prompt (incoming) styles
           isPrompt && "bg-[#3a3a3c] text-white rounded-bl-md",
-          // Reply (outgoing) styles - iMessage green
-          !isPrompt && "bg-[#34c759] text-white rounded-br-md",
+          // Reply (outgoing) styles - accessible green (#1a7d3c)
+          !isPrompt && "bg-message-green text-white rounded-br-md",
           // Winner highlight
           isWinner && "ring-2 ring-amber-400 ring-offset-2 ring-offset-black",
-          // Selected state
-          isSelected && "ring-2 ring-[#0a84ff] ring-offset-2 ring-offset-black",
+          // Selected state - accessible blue (#0061c2)
+          isSelected && "ring-2 ring-[#0061c2] ring-offset-2 ring-offset-black",
           // Interactive state
           onClick && "cursor-pointer active:scale-[0.98] transition-transform"
         )}
@@ -152,7 +152,7 @@ export function MessageBubble({
             "absolute bottom-0 w-3 h-3",
             isPrompt
               ? "left-0 -translate-x-1/2 bg-[#3a3a3c]"
-              : "right-0 translate-x-1/2 bg-[#34c759]"
+              : "right-0 translate-x-1/2 bg-message-green"
           )}
           style={{
             clipPath: isPrompt
@@ -168,7 +168,7 @@ export function MessageBubble({
         {!isPrompt && isDelivered && (
           <span className="text-[#8e8e93]">
             {isRead ? (
-              <CheckCheck className="w-3 h-3 text-[#0a84ff]" />
+              <CheckCheck className="w-3 h-3 text-[#0061c2]" />
             ) : (
               <Check className="w-3 h-3" />
             )}
@@ -200,7 +200,7 @@ export function TypingIndicator({ className }: { className?: string }) {
   return (
     <motion.div
       className={cn(
-        "flex items-center gap-1 self-end px-4 py-3 bg-[#34c759] rounded-2xl rounded-br-md max-w-[80px]",
+        "flex items-center gap-1 self-end px-4 py-3 bg-message-green rounded-2xl rounded-br-md max-w-[80px]",
         className
       )}
       initial={{ opacity: 0, scale: 0.8 }}
