@@ -24,7 +24,7 @@ export async function joinGame(
   player: Player
 ): Promise<JoinGameResult> {
   const game = await db.query.games.findFirst({
-    where: eq(games.code, gameCode),
+    where: eq(games.code, gameCode.toUpperCase()),
   });
 
   const validationResult = match(game)
@@ -102,7 +102,7 @@ export async function checkAvailability(
   gameCode: string
 ): Promise<CheckAvailabilityResult> {
   const game = await db.query.games.findFirst({
-    where: eq(games.code, gameCode),
+    where: eq(games.code, gameCode.toUpperCase()),
   });
 
   return match(game)

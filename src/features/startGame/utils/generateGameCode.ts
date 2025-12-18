@@ -9,7 +9,7 @@ function randomElement<T>(arr: readonly T[]): T {
 }
 
 export async function generateUniqueGameCode(): Promise<string> {
-  let code = randomElement(codeWords);
+  let code = randomElement(codeWords).toUpperCase();
   let exists = true;
 
   while (exists) {
@@ -20,7 +20,7 @@ export async function generateUniqueGameCode(): Promise<string> {
     if (!existing) {
       exists = false;
     } else {
-      code = randomElement(codeWords); // try again
+      code = randomElement(codeWords).toUpperCase(); // try again
     }
   }
 
