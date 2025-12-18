@@ -285,3 +285,4 @@ export function WildcardCard({
     </motion.div>
   );
 }
+

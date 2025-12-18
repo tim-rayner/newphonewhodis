@@ -1198,5 +1198,149 @@
     "value": "If I legally change my name to 'Defendant,' do I win every court case?",
     "type": "prompt",
     "img": null
+  },
+  {
+    "id": "prompt_custom_001",
+    "value": "Did you mean what you said at the Christmas party, or where you just drunk?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_002",
+    "value": "Hey number neighbour!",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_003",
+    "value": "What you said to me at work the other day wasn't funny, I've reported you to HR",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_gif_001",
+    "value": "Hey, did you get my email? Re: attached",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_custom_004",
+    "value": "Hey it's me from Grindr",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_005",
+    "value": "Hey it's me from Tinder",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_006",
+    "value": "I got us Travis Scott tickets! You in?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_007",
+    "value": "I got us Taylor Swift tickets! You in?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_008",
+    "value": "Someone said to text this number for free counselling?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_gif_002",
+    "value": "New phone, who dis?",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_custom_009",
+    "value": "Welcome to Grindr! Here is your one time passcode: 583263",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_010",
+    "value": "Welcome to Tinder! Here is your one time passcode: 593273",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_011",
+    "value": "Was it you I saw on the plane yesterday? 👀",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_012",
+    "value": "Our manager was asking for you today, I don't think it's good news 😬",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_013",
+    "value": "Want some advice? Stop texting this number…",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_gif_003",
+    "value": "Is this you???",
+    "type": "prompt",
+    "img": "gif"
+  },
+  {
+    "id": "prompt_custom_014",
+    "value": "I got you for secret Santa!",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_015",
+    "value": "Can I come round on Christmas Day? I've got something to confess. I think it would be better in person…",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_016",
+    "value": "Have you still got some of that 🍁 about?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_017",
+    "value": "How much for a gram?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_018",
+    "value": "This is my first time buying drugs… have you got any?",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_019",
+    "value": "Don't panic… I need to get rid of a body… I'm outside your house.",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_020",
+    "value": "I finally did it. I need help burying the body",
+    "type": "prompt",
+    "img": null
+  },
+  {
+    "id": "prompt_custom_021",
+    "value": "Someone told me this was Heisenberg's number… got any crystal?",
+    "type": "prompt",
+    "img": null
   }
 ]

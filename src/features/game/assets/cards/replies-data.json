@@ -1048,5 +1048,185 @@
     "value": "The way I gasped.",
     "type": "reply",
     "img": null
+  },
+  {
+    "id": "reply_custom_001",
+    "value": "It's that time already? Wow! Time flies!",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_002",
+    "value": "I can't imagine so… but maybe…",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_003",
+    "value": "Don't text this number again",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_004",
+    "value": "I'm 🤏🏼 close to blocking this number",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_005",
+    "value": "Nope, I'm still in denial",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_006",
+    "value": "Omg!! Yes!!",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_007",
+    "value": "Lmao, think you've got the wrong number",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_008",
+    "value": "I just remembered! I don't care.",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_gif_001",
+    "value": "This is how your email found me:",
+    "type": "reply",
+    "img": "gif"
+  },
+  {
+    "id": "reply_custom_gif_002",
+    "value": "Me when I first read this text",
+    "type": "reply",
+    "img": "gif"
+  },
+  {
+    "id": "reply_custom_gif_003",
+    "value": "This sums up my response",
+    "type": "reply",
+    "img": "gif"
+  },
+  {
+    "id": "reply_custom_009",
+    "value": "I think you've got the wrong number…. Or have you 🫢",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_010",
+    "value": "I think you've got the wrong number… but yes.",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_011",
+    "value": "BORING",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_012",
+    "value": "FAKE NEWS",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_013",
+    "value": "This feels illegal…",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_014",
+    "value": "Let's pretend you didn't just say that",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_015",
+    "value": "Maybe… I think about this all the time 🤭🤫",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_016",
+    "value": "Maybe… maybe not 🤭",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_017",
+    "value": "You're in denial.",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_gif_004",
+    "value": "How your email finds me:",
+    "type": "reply",
+    "img": "gif"
+  },
+  {
+    "id": "reply_custom_018",
+    "value": "This line's being monitored, WhatsApp me",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_019",
+    "value": "👍",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_020",
+    "value": "Shtrebvkjuyvfr sorry my dog took my phone",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_021",
+    "value": "👀👀",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_022",
+    "value": "Aye papi",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_023",
+    "value": "SAY MY NAME",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_024",
+    "value": "You're god damn right",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_025",
+    "value": "I hate it when that happens",
+    "type": "reply",
+    "img": null
+  },
+  {
+    "id": "reply_custom_026",
+    "value": "I've been waiting for this text for ages",
+    "type": "reply",
+    "img": null
   }
 ]

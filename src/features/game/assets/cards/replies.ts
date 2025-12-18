@@ -58,3 +58,4 @@ export function getReplyDisplayText(
     return `📷 ${card.img.replace(/\.[^.]+$/, "").replace(/_/g, " ")}`;
   return card.id;
 }
+

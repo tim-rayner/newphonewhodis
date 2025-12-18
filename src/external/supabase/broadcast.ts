@@ -44,3 +44,4 @@ export async function broadcastGameEnded(gameId: string): Promise<void> {
   // Clean up the channel after sending
   await supabaseAdmin.removeChannel(channel);
 }
+

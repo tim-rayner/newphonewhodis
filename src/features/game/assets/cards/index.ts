@@ -28,3 +28,4 @@ export type { Card, PromptCard, ReplyCard } from "@/features/card";
 export function cardHasImage(card: Card | undefined | null): boolean {
   return !!card?.img;
 }
+

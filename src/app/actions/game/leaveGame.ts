@@ -47,3 +47,4 @@ export async function leaveGame(payload: LeaveGamePayload) {
 
   return { success: true, gameEnded: false };
 }
+

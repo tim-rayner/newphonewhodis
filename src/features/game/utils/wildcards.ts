@@ -47,3 +47,4 @@ export function applyWildcardChance(cardIds: string[]): string[] {
 export function maybeWildcard(cardId: string): string {
   return Math.random() < WILDCARD_CHANCE ? generateWildcardId() : cardId;
 }
+
