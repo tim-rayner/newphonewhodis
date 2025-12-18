@@ -16,11 +16,7 @@ import {
 } from "react";
 import { GifCacheProvider } from "../context";
 import { useGameActions, useGameChannel } from "../hooks";
-import { ConnectionStatus } from "./ConnectionStatus";
-import { CountdownTimer } from "./CountdownTimer";
-import { GameMenu } from "./GameMenu";
-import { GameCodeBadge } from "./mobile/GameCodeBadge";
-import { JudgeBanner } from "./mobile/JudgeBanner";
+import { GameNavbar } from "./GameNavbar";
 import {
   AnsweringPhase,
   DealtPhase,
@@ -28,7 +24,6 @@ import {
   JudgingPhase,
   LobbyPhase,
 } from "./phases";
-import { PlayerList } from "./PlayerList";
 import { WinnerReveal } from "./WinnerReveal";
 
 const ROUND_DURATION_SECONDS = 60;
@@ -234,9 +229,10 @@ export default function GamePageClient({
     }
   }, [state.phase, isJudge, state.players, state.round.submissions, actions]);
 
-  // Show judge banner when not in lobby (already shown in lobby component)
-  const showJudgeBanner =
-    state.phase !== "LOBBY" && state.phase !== "FINISHED" && judgeName;
+  // Get host info from the game
+  const host = state.players[initialGame.hostId];
+  const hostName = host?.name ?? "Unknown";
+  const hostAvatar = host?.avatar ?? null;
 
   return (
     <GifCacheProvider serverGifUrls={state.gifUrls}>
@@ -254,55 +250,24 @@ export default function GamePageClient({
           />
         )}
 
-        {/* Top Bar - Mobile optimized */}
-        <header className="sticky top-0 z-20 bg-background/95 backdrop-blur-md border-b safe-area-top">
-          <div className="container mx-auto px-4 py-3">
-            <div className="flex items-center justify-between gap-2">
-              {/* Left: Game info */}
-              <div className="flex items-center gap-2 min-w-0 flex-1">
-                {/* Title - hidden on mobile */}
-                <h1 className="text-lg font-bold hidden md:block truncate">
-                  NPWD
-                </h1>
-                {/* Round indicator */}
-                <span className="px-2 py-1 bg-secondary rounded-md text-xs font-medium whitespace-nowrap">
-                  R{state.round.roundNumber}
-                </span>
-                {/* Game code - compact on mobile, visible in header for quick sharing */}
-                {state.phase !== "LOBBY" && (
-                  <GameCodeBadge gameCode={game.code} variant="compact" />
-                )}
-              </div>
-
-              {/* Right: Timer, Connection, Players, Menu */}
-              <div className="flex items-center gap-2">
-                {state.phase === "ANSWERING" && (
-                  <CountdownTimer
-                    startTime={state.round.roundStartAt}
-                    durationSeconds={ROUND_DURATION_SECONDS}
-                    size="sm"
-                  />
-                )}
-                <ConnectionStatus
-                  status={connectionStatus}
-                  onReconnect={reconnect}
-                />
-                <PlayerList players={players} />
-                <GameMenu
-                  isHost={isHost}
-                  isPending={actions.isPending}
-                  onEndGame={handleEndGame}
-                  onLeaveGame={handleLeaveGame}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Judge Banner - below header */}
-          {showJudgeBanner && (
-            <JudgeBanner judgeName={judgeName} isCurrentUserJudge={isJudge} />
-          )}
-        </header>
+        {/* Unified Game Navbar */}
+        <GameNavbar
+          roundNumber={state.round.roundNumber}
+          phase={state.phase}
+          roundStartAt={state.round.roundStartAt}
+          gameCode={game.code}
+          players={players}
+          hostName={hostName}
+          hostAvatar={hostAvatar}
+          connectionStatus={connectionStatus}
+          onReconnect={reconnect}
+          judgeName={judgeName}
+          isCurrentUserJudge={isJudge}
+          isHost={isHost}
+          isPending={actions.isPending}
+          onEndGame={handleEndGame}
+          onLeaveGame={handleLeaveGame}
+        />
 
         {/* Main Content - Mobile optimized with safe areas */}
         <main className="container mx-auto px-4 py-6 max-w-lg pb-safe">

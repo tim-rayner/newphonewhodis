@@ -217,7 +217,7 @@ export function GameCodeBadge({
           )}
         </button>
 
-        <button
+        {/* <button
           onClick={handleShare}
           className={cn(
             "p-1.5 rounded-md",
@@ -226,9 +226,8 @@ export function GameCodeBadge({
           title="Share game"
         >
           <Share2 className="w-4 h-4" />
-        </button>
+        </button> */}
       </div>
     </div>
   );
 }
-
