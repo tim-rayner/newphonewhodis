@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { trpc } from "@/external/trpc/client";
 import { usePlayerIdentity } from "@/features/player/hooks/usePlayerIdentity";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowLeft, Check, Hash, Loader2, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -104,78 +106,143 @@ export default function JoinGame() {
 
   return (
     <div className="flex flex-col gap-4">
-      {step === 1 && (
-        <form
-          onSubmit={gameCodeForm.handleSubmit(onCheckAvailability)}
-          className="flex flex-col gap-3"
-        >
-          <Input
-            {...gameCodeForm.register("gameCode")}
-            placeholder="Enter game code"
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            spellCheck={false}
-          />
-          {gameCodeForm.formState.errors.gameCode && (
-            <p className="text-red-500 text-sm">
-              {gameCodeForm.formState.errors.gameCode.message}
-            </p>
-          )}
-          {availabilityError && (
-            <p className="text-red-500 text-sm">{availabilityError}</p>
-          )}
-          <Button type="submit" disabled={checkAvailabilityMutation.isPending}>
-            {checkAvailabilityMutation.isPending
-              ? "Checking..."
-              : "Check Availability"}
-          </Button>
-        </form>
-      )}
+      <AnimatePresence mode="wait">
+        {step === 1 && (
+          <motion.form
+            key="step1"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            onSubmit={gameCodeForm.handleSubmit(onCheckAvailability)}
+            className="flex flex-col gap-4"
+          >
+            {/* Game code input with icon */}
+            <div className="relative">
+              <Hash className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Input
+                {...gameCodeForm.register("gameCode")}
+                placeholder="Enter game code"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="characters"
+                spellCheck={false}
+                className="pl-12 uppercase tracking-wider font-mono"
+              />
+            </div>
 
-      {step === 2 && (
-        <form
-          onSubmit={nameForm.handleSubmit(onJoinGame)}
-          className="flex flex-col gap-3"
-        >
-          <p className="text-sm text-muted-foreground">
-            Game code: <span className="font-mono">{validatedGameCode}</span>
-          </p>
-          <Input
-            {...nameForm.register("name")}
-            placeholder="Enter your name"
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            spellCheck={false}
-          />
-          {nameForm.formState.errors.name && (
-            <p className="text-red-500 text-sm">
-              {nameForm.formState.errors.name.message}
-            </p>
-          )}
-          {availabilityError && (
-            <p className="text-red-500 text-sm">{availabilityError}</p>
-          )}
-          <div className="flex gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleBack}
-              disabled={joinGameMutation.isPending}
-            >
-              Back
-            </Button>
+            {/* Error messages */}
+            {gameCodeForm.formState.errors.gameCode && (
+              <p className="text-sm text-destructive px-1 animate-slide-up">
+                {gameCodeForm.formState.errors.gameCode.message}
+              </p>
+            )}
+            {availabilityError && (
+              <p className="text-sm text-destructive px-1 animate-slide-up">
+                {availabilityError}
+              </p>
+            )}
+
+            {/* Submit button */}
             <Button
               type="submit"
-              disabled={joinGameMutation.isPending}
-              className="flex-1"
+              size="lg"
+              disabled={checkAvailabilityMutation.isPending}
+              className="w-full gap-2"
             >
-              {joinGameMutation.isPending ? "Joining..." : "Join Game"}
+              {checkAvailabilityMutation.isPending ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Checking...
+                </>
+              ) : (
+                <>
+                  <Check className="w-5 h-5" />
+                  Find Game
+                </>
+              )}
             </Button>
-          </div>
-        </form>
-      )}
+          </motion.form>
+        )}
+
+        {step === 2 && (
+          <motion.form
+            key="step2"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            onSubmit={nameForm.handleSubmit(onJoinGame)}
+            className="flex flex-col gap-4"
+          >
+            {/* Game code badge */}
+            <div className="flex items-center gap-2 p-3 bg-primary/10 rounded-xl">
+              <Check className="w-5 h-5 text-primary" />
+              <span className="text-sm text-foreground">
+                Game found:{" "}
+                <span className="font-mono font-bold uppercase">
+                  {validatedGameCode}
+                </span>
+              </span>
+            </div>
+
+            {/* Name input with icon */}
+            <div className="relative">
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Input
+                {...nameForm.register("name")}
+                placeholder="Enter your name"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="words"
+                spellCheck={false}
+                className="pl-12"
+                autoFocus
+              />
+            </div>
+
+            {/* Error messages */}
+            {nameForm.formState.errors.name && (
+              <p className="text-sm text-destructive px-1 animate-slide-up">
+                {nameForm.formState.errors.name.message}
+              </p>
+            )}
+            {availabilityError && (
+              <p className="text-sm text-destructive px-1 animate-slide-up">
+                {availabilityError}
+              </p>
+            )}
+
+            {/* Action buttons */}
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                size="lg"
+                onClick={handleBack}
+                disabled={joinGameMutation.isPending}
+                className="gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </Button>
+              <Button
+                type="submit"
+                size="lg"
+                disabled={joinGameMutation.isPending}
+                className="flex-1 gap-2"
+              >
+                {joinGameMutation.isPending ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Joining...
+                  </>
+                ) : (
+                  "Join Game"
+                )}
+              </Button>
+            </div>
+          </motion.form>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

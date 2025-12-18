@@ -3,65 +3,86 @@
 @tailwind utilities;
 
 @layer base {
+  /* Dark mode is default - messaging app theme */
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
+    /* Core colors - iOS dark theme inspired */
+    --background: 0 0% 0%; /* Pure black #000000 */
+    --foreground: 0 0% 98%; /* Near white #fafafa */
 
-    /* iMessage/WhatsApp theme colors */
-    --message-incoming: 229 229 234;
-    --message-outgoing: 52 199 89;
-    --message-outgoing-imessage: 0 122 255;
-    --phone-frame: 28 28 30;
-    --phone-screen: 0 0 0;
-    --phone-status-bar: 255 255 255;
+    /* Card/Surface colors */
+    --card: 0 0% 11%; /* #1c1c1e - iOS elevated surface */
+    --card-foreground: 0 0% 98%;
+
+    /* Popover */
+    --popover: 0 0% 11%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Primary - Message Green */
+    --primary: 142 71% 45%; /* #34c759 - iMessage green */
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Elevated surface */
+    --secondary: 0 0% 17%; /* #2c2c2e */
+    --secondary-foreground: 0 0% 98%;
+
+    /* Muted - Subdued elements */
+    --muted: 0 0% 17%;
+    --muted-foreground: 0 0% 56%; /* #8e8e93 - iOS secondary label */
+
+    /* Accent */
+    --accent: 0 0% 17%;
+    --accent-foreground: 0 0% 98%;
+
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Border & Input */
+    --border: 0 0% 22%; /* #38383a */
+    --input: 0 0% 17%;
+    --ring: 142 71% 45%; /* Match primary green */
+
+    /* Radius */
+    --radius: 0.75rem;
+
+    /* Messaging theme specific */
+    --message-green: 142 71% 45%; /* #34c759 */
+    --message-blue: 211 100% 50%; /* #0a84ff - iMessage blue */
+    --message-bubble-incoming: 0 0% 23%; /* #3a3a3c */
+    --message-bubble-outgoing: 142 71% 45%; /* #34c759 */
+    --chat-timestamp: 0 0% 56%; /* #8e8e93 */
+
+    /* Phone frame */
+    --phone-frame: 0 0% 11%; /* #1c1c1e */
+    --phone-screen: 0 0% 0%;
+    --phone-status-bar: 0 0% 100%;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+  /* Light mode override (if ever needed) */
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+    --primary: 142 71% 45%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 142 71% 45%;
 
-    /* iMessage/WhatsApp theme colors - dark mode */
-    --message-incoming: 58 58 60;
-    --message-outgoing: 52 199 89;
-    --message-outgoing-imessage: 10 132 255;
-    --phone-frame: 28 28 30;
-    --phone-screen: 0 0 0;
-    --phone-status-bar: 255 255 255;
+    --message-bubble-incoming: 0 0% 90%; /* #e5e5ea */
+    --message-bubble-outgoing: 142 71% 45%;
+    --chat-timestamp: 0 0% 56%;
   }
 }
 
@@ -69,8 +90,17 @@
   * {
     @apply border-border;
   }
+
+  html {
+    /* Force dark color scheme for system UI elements */
+    color-scheme: dark;
+  }
+
   body {
     @apply bg-background text-foreground;
+    /* System font stack for native feel */
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+      "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     /* Prevent text size adjustment on orientation change */
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -78,6 +108,9 @@
     scroll-behavior: smooth;
     /* Prevent pull-to-refresh on mobile */
     overscroll-behavior-y: contain;
+    /* Antialiased text for cleaner rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* Improve tap highlight on mobile */
@@ -85,6 +118,11 @@
   a,
   [role="button"] {
     -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Focus visible for accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
   }
 }
 
@@ -117,7 +155,7 @@
     padding-top: max(0.75rem, env(safe-area-inset-top));
   }
 
-  /* Touch-friendly minimum sizes */
+  /* Touch-friendly minimum sizes (WCAG/Meta guidelines) */
   .touch-target {
     min-height: 48px;
     min-width: 48px;
@@ -147,23 +185,32 @@
     }
   }
 
-  /* iMessage bubble colors */
+  /* Message bubble utilities */
   .bg-message-incoming {
-    background-color: rgb(var(--message-incoming));
+    background-color: hsl(var(--message-bubble-incoming));
   }
   .bg-message-outgoing {
-    background-color: rgb(var(--message-outgoing));
+    background-color: hsl(var(--message-bubble-outgoing));
   }
-  .bg-message-imessage {
-    background-color: rgb(var(--message-outgoing-imessage));
+  .bg-message-green {
+    background-color: hsl(var(--message-green));
+  }
+  .bg-message-blue {
+    background-color: hsl(var(--message-blue));
+  }
+  .text-message-green {
+    color: hsl(var(--message-green));
+  }
+  .text-chat-timestamp {
+    color: hsl(var(--chat-timestamp));
   }
 
   /* Phone frame colors */
   .bg-phone-frame {
-    background-color: rgb(var(--phone-frame));
+    background-color: hsl(var(--phone-frame));
   }
   .bg-phone-screen {
-    background-color: rgb(var(--phone-screen));
+    background-color: hsl(var(--phone-screen));
   }
 
   /* Scrollbar hiding for cleaner mobile UI */
@@ -197,16 +244,27 @@
       font-size: 16px;
     }
   }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
 
 /* Animation keyframes */
 @keyframes pulse-glow {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(var(--primary), 0.4);
+    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4);
   }
   50% {
-    box-shadow: 0 0 0 8px rgba(var(--primary), 0);
+    box-shadow: 0 0 0 8px hsl(var(--primary) / 0);
   }
 }
 
@@ -233,6 +291,43 @@
   }
 }
 
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
 }
@@ -243,4 +338,16 @@
 
 .animate-shake {
   animation: shake 0.3s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+.animate-bounce-in {
+  animation: bounce-in 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }

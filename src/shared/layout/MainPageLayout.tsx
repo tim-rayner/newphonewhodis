@@ -3,17 +3,19 @@
 import { ReactNode } from "react";
 import { DefaultHeader } from "./DefaultHeader";
 
-export function MainPageLayout({ children }: { children: ReactNode }) {
+interface MainPageLayoutProps {
+  children: ReactNode;
+  showHeader?: boolean;
+}
+
+export function MainPageLayout({
+  children,
+  showHeader = true,
+}: MainPageLayoutProps) {
   return (
-    <div className="min-h-screen flex flex-col">
-      <DefaultHeader />
-      <main className="flex-1 container mx-auto px-4 py-8">{children}</main>
+    <div className="min-h-screen flex flex-col bg-background">
+      {showHeader && <DefaultHeader />}
+      <main className="flex-1 flex flex-col">{children}</main>
     </div>
   );
 }
-
-
-
-
-
-

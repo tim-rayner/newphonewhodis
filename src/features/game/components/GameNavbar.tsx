@@ -185,10 +185,10 @@ export function GameNavbar({
                       <div
                         key={player.id}
                         className={cn(
-                          "flex items-center gap-3 p-2 rounded-lg",
-                          index === 0 && player.score > 0
-                            ? "bg-amber-50 dark:bg-amber-900/20"
-                            : "bg-secondary/50"
+                          "flex items-center gap-3 p-2 rounded-lg bg-secondary/50",
+                          index === 0 &&
+                            player.score > 0 &&
+                            "border-2 border-amber-500/60"
                         )}
                       >
                         <span className="w-5 text-sm font-medium text-muted-foreground">

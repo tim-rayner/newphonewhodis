@@ -351,16 +351,6 @@ export default function GamePageClient({
             </motion.div>
           )}
         </main>
-
-        {/* Debug: Raw state (collapsible) - hidden by default on mobile */}
-        <details className="container mx-auto px-4 py-8 max-w-lg hidden md:block">
-          <summary className="text-sm text-muted-foreground cursor-pointer">
-            Debug: Raw State
-          </summary>
-          <pre className="mt-2 p-4 bg-secondary rounded-lg text-xs overflow-auto">
-            {JSON.stringify({ gameId: game.id, playerId, state }, null, 2)}
-          </pre>
-        </details>
       </div>
     </GifCacheProvider>
   );

@@ -580,8 +580,9 @@ export function handleLeaveGame(
   }
 
   // Remove the player from the game
-  const { [payload.actorId]: removedPlayer, ...remainingPlayers } =
-    snapshot.players;
+  const remainingPlayers = Object.fromEntries(
+    Object.entries(snapshot.players).filter(([id]) => id !== payload.actorId)
+  );
   const newPlayerOrder = snapshot.playerOrder.filter(
     (id) => id !== payload.actorId
   );
@@ -609,4 +610,3 @@ export function handleLeaveGame(
     },
   };
 }
-
