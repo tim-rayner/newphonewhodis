@@ -150,10 +150,8 @@ export function FinishedPhase({
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.7 + index * 0.1 }}
               className={cn(
-                "flex items-center gap-4 p-4 rounded-xl",
-                index === 0
-                  ? "bg-gradient-to-r from-amber-100 to-amber-50 dark:from-amber-900/30 dark:to-amber-900/10"
-                  : "bg-secondary/50"
+                "flex items-center gap-4 p-4 rounded-xl bg-secondary/50",
+                index === 0 && "ring-2 ring-amber-500"
               )}
             >
               {/* Rank badge */}
@@ -212,4 +210,3 @@ export function FinishedPhase({
     </motion.div>
   );
 }
-
