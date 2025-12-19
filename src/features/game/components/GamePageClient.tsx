@@ -1,5 +1,6 @@
 "use client";
 
+import { trpc } from "@/external/trpc/client";
 import { getPromptCard } from "@/features/game/assets/cards";
 import type { GameSnapshotSchema } from "@/features/game/types/schema";
 import { usePlayerIdentity } from "@/features/player/hooks/usePlayerIdentity";
@@ -73,15 +74,18 @@ export default function GamePageClient({
   const handleStateUpdate = useCallback((newState: GameSnapshotSchema) => {
     setGame((prev) => {
       const prevPhase = prev.state.phase;
-      const newPhase = newState.phase;
       const prevPrompt = prev.state.round.promptCard;
 
-      // Detect transition from JUDGING to LOBBY (round ended with winner)
-      if (prevPhase === "JUDGING" && newPhase === "LOBBY") {
-        const winnerId = newState.round.winningPlayerId;
-        const winningCardId = winnerId
-          ? prev.state.round.submissions[winnerId]
-          : null;
+      // Detect winner when transitioning from JUDGING phase
+      // This handles both JUDGING -> ANSWERING (next round) and JUDGING -> FINISHED (game over)
+      // We check for winningPlayerId to determine if there was a winner this round
+      const winnerId = newState.round.winningPlayerId;
+      const wasJudging = prevPhase === "JUDGING";
+      const hasWinner = winnerId && newState.players[winnerId];
+
+      if (wasJudging && hasWinner) {
+        // Get the winning card from the PREVIOUS state's submissions (before they were cleared)
+        const winningCardId = prev.state.round.submissions[winnerId];
 
         // Capture the judge name from the previous state (before round reset)
         const prevJudgeId = prev.state.round.judgeId;
@@ -89,7 +93,7 @@ export default function GamePageClient({
           ? prev.state.players[prevJudgeId]?.name || "Judge"
           : "Judge";
 
-        if (winnerId && newState.players[winnerId] && winningCardId) {
+        if (winningCardId) {
           const winnerPlayer = newState.players[winnerId];
           const promptCard = prevPrompt ? getPromptCard(prevPrompt) : null;
           // Capture wildcardTexts from current state (before it changes)
@@ -118,11 +122,30 @@ export default function GamePageClient({
     });
   }, []);
 
+  // tRPC utils for fetching game state on reconnection
+  const trpcUtils = trpc.useUtils();
+
+  // Sync state from database - called after reconnection to catch missed broadcasts
+  const handleSyncState = useCallback(async () => {
+    try {
+      const freshGame = await trpcUtils.game.getGame.fetch({
+        gameId: initialGame.id,
+      });
+      if (freshGame?.state) {
+        // Apply the fetched state (don't trigger winner reveal on sync)
+        setGame((prev) => ({ ...prev, state: freshGame.state }));
+      }
+    } catch (error) {
+      console.error("Failed to sync game state:", error);
+    }
+  }, [initialGame.id, trpcUtils.game.getGame]);
+
   // Subscribe to game channel for realtime updates
   const { connectionStatus, reconnect } = useGameChannel({
     gameId: initialGame.id,
     onStateUpdate: handleStateUpdate,
     onGameEnded: handleGameEnded,
+    onSyncState: handleSyncState,
   });
 
   // Game actions with loading states

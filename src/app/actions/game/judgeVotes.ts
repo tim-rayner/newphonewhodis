@@ -75,8 +75,9 @@ export async function judgeVotes(payload: JudgeVotesPayload) {
     return { success: true };
   }
 
-  // Game continues - broadcast LOBBY state first so clients see the winner
-  await broadcastGameState(payload.gameId, afterVoteWithWildcards);
+  // Game continues - chain to next round
+  // Note: We broadcast only once with the final ANSWERING state to avoid race conditions
+  // The client detects the winner by checking winningPlayerId when phase changes from JUDGING
 
   // Chain: auto-deal cards for next round (new judge from rotation)
   const afterDeal = handleJudgeDeals(afterVoteWithWildcards, {

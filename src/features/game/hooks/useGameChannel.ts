@@ -16,21 +16,26 @@ interface UseGameChannelOptions {
   gameId: string;
   onStateUpdate: (state: GameSnapshotSchema) => void;
   onGameEnded?: () => void;
+  /** Called after successful reconnection to fetch and sync latest state from DB */
+  onSyncState?: () => Promise<void>;
 }
 
 interface UseGameChannelReturn {
   connectionStatus: ConnectionStatus;
   reconnect: () => void;
+  /** Manually trigger a state sync from the database */
+  syncState: () => Promise<void>;
 }
 
 /**
  * Hook to manage Supabase Broadcast subscription for game state updates
- * Provides connection status and automatic reconnection
+ * Provides connection status and automatic reconnection with state sync
  */
 export function useGameChannel({
   gameId,
   onStateUpdate,
   onGameEnded,
+  onSyncState,
 }: UseGameChannelOptions): UseGameChannelReturn {
   const [connectionStatus, setConnectionStatus] =
     useState<ConnectionStatus>("connecting");
@@ -38,11 +43,16 @@ export function useGameChannel({
   const supabaseRef = useRef(createClient());
   const onStateUpdateRef = useRef(onStateUpdate);
   const onGameEndedRef = useRef(onGameEnded);
+  const onSyncStateRef = useRef(onSyncState);
+  // Track if this is a reconnection (not initial connection)
+  const hasConnectedOnceRef = useRef(false);
+  const isReconnectingRef = useRef(false);
 
   // Keep the callback refs updated
   useEffect(() => {
     onStateUpdateRef.current = onStateUpdate;
     onGameEndedRef.current = onGameEnded;
+    onSyncStateRef.current = onSyncState;
   });
 
   useEffect(() => {
@@ -72,10 +82,23 @@ export function useGameChannel({
         // Game has been ended by host - trigger redirect
         onGameEndedRef.current?.();
       })
-      .subscribe((status) => {
+      .subscribe(async (status) => {
         switch (status) {
           case "SUBSCRIBED":
             setConnectionStatus("connected");
+            // If this is a reconnection, sync state from database
+            if (hasConnectedOnceRef.current && isReconnectingRef.current) {
+              isReconnectingRef.current = false;
+              try {
+                await onSyncStateRef.current?.();
+              } catch (error) {
+                console.error(
+                  "Failed to sync state after reconnection:",
+                  error
+                );
+              }
+            }
+            hasConnectedOnceRef.current = true;
             break;
           case "CLOSED":
             setConnectionStatus("disconnected");
@@ -96,6 +119,37 @@ export function useGameChannel({
     };
   }, [gameId]);
 
+  // Manual state sync - can be called independently
+  const syncState = useCallback(async () => {
+    try {
+      await onSyncStateRef.current?.();
+    } catch (error) {
+      console.error("Failed to sync state:", error);
+    }
+  }, []);
+
+  // Periodic state sync heartbeat - catches any missed broadcasts
+  // Only runs while connected, every 30 seconds
+  useEffect(() => {
+    if (connectionStatus !== "connected") {
+      return;
+    }
+
+    const HEARTBEAT_INTERVAL_MS = 30000; // 30 seconds
+
+    const intervalId = setInterval(async () => {
+      try {
+        await onSyncStateRef.current?.();
+      } catch (error) {
+        console.error("Heartbeat state sync failed:", error);
+      }
+    }, HEARTBEAT_INTERVAL_MS);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [connectionStatus]);
+
   const reconnect = useCallback(() => {
     const supabase = supabaseRef.current;
 
@@ -103,6 +157,9 @@ export function useGameChannel({
     if (channelRef.current) {
       supabase.removeChannel(channelRef.current);
     }
+
+    // Mark that we're reconnecting so we sync state after SUBSCRIBED
+    isReconnectingRef.current = true;
 
     // Reset status and resubscribe
     setConnectionStatus("connecting");
@@ -125,10 +182,22 @@ export function useGameChannel({
         // Game has been ended by host - trigger redirect
         onGameEndedRef.current?.();
       })
-      .subscribe((status) => {
+      .subscribe(async (status) => {
         switch (status) {
           case "SUBSCRIBED":
             setConnectionStatus("connected");
+            // Sync state from database after reconnection
+            if (isReconnectingRef.current) {
+              isReconnectingRef.current = false;
+              try {
+                await onSyncStateRef.current?.();
+              } catch (error) {
+                console.error(
+                  "Failed to sync state after reconnection:",
+                  error
+                );
+              }
+            }
             break;
           case "CLOSED":
             setConnectionStatus("disconnected");
@@ -148,6 +217,6 @@ export function useGameChannel({
   return {
     connectionStatus,
     reconnect,
+    syncState,
   };
 }
-
